@@ -1,0 +1,102 @@
+ELF Header:
+  Magic:   7f 45 4c 46 01 02 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF32
+  Data:                              2's complement, big endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              EXEC (Executable file)
+  Machine:                           MIPS R3000
+  Version:                           0x1
+  Entry point address:               0x82000000
+  Start of program headers:          52 (bytes into file)
+  Start of section headers:          37164 (bytes into file)
+  Flags:                             0x50001001, noreorder, o32, mips32
+  Size of this header:               52 (bytes)
+  Size of program headers:           32 (bytes)
+  Number of program headers:         3
+  Size of section headers:           40 (bytes)
+  Number of section headers:         14
+  Section header string table index: 11
+
+Section Headers:
+  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            00000000 000000 000000 00      0   0  0
+  [ 1] .text             PROGBITS        82000000 0000a0 000ae0 00 WAX  0   0 16
+  [ 2] .reginfo          MIPS_REGINFO    82000ae0 000b80 000018 18   A  0   0  4
+  [ 3] .rodata.str1.4    PROGBITS        82000af8 000b98 0000a2 01 AMS  0   0  4
+  [ 4] .rodata           PROGBITS        82000ba0 000c40 000210 00   A  0   0 16
+  [ 5] .data             PROGBITS        82000db0 000e50 000000 00  WA  0   0 16
+  [ 6] .data.stk         PROGBITS        82000db0 000e50 008000 00  WA  0   0  1
+  [ 7] .bss              NOBITS          80500000 000094 000000 00  WA  0   0 16
+  [ 8] .pdr              PROGBITS        00000000 008e50 0001a0 00      0   0  4
+  [ 9] .mdebug.abi32     PROGBITS        00000000 008ff0 000000 00      0   0  1
+  [10] .comment          PROGBITS        00000000 008ff0 0000c8 00      0   0  1
+  [11] .shstrtab         STRTAB          00000000 0090b8 000072 00      0   0  1
+  [12] .symtab           SYMTAB          00000000 00935c 000240 10     13  24  4
+  [13] .strtab           STRTAB          00000000 00959c 0000be 00      0   0  1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings)
+  I (info), L (link order), G (group), x (unknown)
+  O (extra OS processing required) o (OS specific), p (processor specific)
+
+There are no section groups in this file.
+
+Program Headers:
+  Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
+  REGINFO        0x000b80 0x82000ae0 0x82000ae0 0x00018 0x00018 R   0x4
+  LOAD           0x000090 0x80500000 0x80500000 0x00000 0x00000 RW  0x10
+  LOAD           0x0000a0 0x82000000 0x82000000 0x08db0 0x08db0 RWE 0x10
+
+ Section to Segment mapping:
+  Segment Sections...
+   00     .reginfo 
+   01     
+   02     .text .reginfo .rodata.str1.4 .rodata .data.stk 
+
+There is no dynamic section in this file.
+
+There are no relocations in this file.
+
+There are no unwind sections in this file.
+
+Symbol table '.symtab' contains 36 entries:
+   Num:    Value  Size Type    Bind   Vis      Ndx Name
+     0: 00000000     0 NOTYPE  LOCAL  DEFAULT  UND 
+     1: 82000000     0 SECTION LOCAL  DEFAULT    1 
+     2: 82000ae0     0 SECTION LOCAL  DEFAULT    2 
+     3: 82000af8     0 SECTION LOCAL  DEFAULT    3 
+     4: 82000ba0     0 SECTION LOCAL  DEFAULT    4 
+     5: 82000db0     0 SECTION LOCAL  DEFAULT    5 
+     6: 82000db0     0 SECTION LOCAL  DEFAULT    6 
+     7: 80500000     0 SECTION LOCAL  DEFAULT    7 
+     8: 00000000     0 SECTION LOCAL  DEFAULT    8 
+     9: 00000000     0 SECTION LOCAL  DEFAULT    9 
+    10: 00000000     0 SECTION LOCAL  DEFAULT   10 
+    11: 00000000     0 SECTION LOCAL  DEFAULT   11 
+    12: 00000000     0 SECTION LOCAL  DEFAULT   12 
+    13: 00000000     0 SECTION LOCAL  DEFAULT   13 
+    14: 00000000     0 FILE    LOCAL  DEFAULT  ABS start.S
+    15: 82000db0     0 NOTYPE  LOCAL  DEFAULT    6 KERNEL_STACK
+    16: 82000034     0 NOTYPE  LOCAL  DEFAULT    1 loop
+    17: 00000000     0 FILE    LOCAL  DEFAULT  ABS main.c
+    18: 00000000     0 FILE    LOCAL  DEFAULT  ABS init.c
+    19: 00000000     0 FILE    LOCAL  DEFAULT  ABS console.c
+    20: 00000000     0 FILE    LOCAL  DEFAULT  ABS print.c
+    21: 82000ba0    25 OBJECT  LOCAL  DEFAULT    4 theFatalMsg
+    22: 00000000     0 FILE    LOCAL  DEFAULT  ABS printf.c
+    23: 820009a0   148 FUNC    LOCAL  DEFAULT    1 myoutput
+    24: 82000120  1388 FUNC    GLOBAL DEFAULT    1 lp_Print
+    25: 82000a70   100 FUNC    GLOBAL DEFAULT    1 _panic
+    26: 820000d8    60 FUNC    GLOBAL DEFAULT    1 printstr
+    27: 82000a34    60 FUNC    GLOBAL DEFAULT    1 printf
+    28: 82000814   384 FUNC    GLOBAL DEFAULT    1 PrintNum
+    29: 820000b0    20 FUNC    GLOBAL DEFAULT    1 printcharc
+    30: 82000000    64 FUNC    GLOBAL DEFAULT    1 _start
+    31: 8200070c   264 FUNC    GLOBAL DEFAULT    1 PrintString
+    32: 82000040    52 FUNC    GLOBAL DEFAULT    1 main
+    33: 8200068c   128 FUNC    GLOBAL DEFAULT    1 PrintChar
+    34: 820000c4    20 FUNC    GLOBAL DEFAULT    1 halt
+    35: 82000080    44 FUNC    GLOBAL DEFAULT    1 mips_init
+
+No version information found in this file.
