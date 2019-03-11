@@ -7,7 +7,7 @@ int fibo(int n)
 	int a=0,b=1;
 	{
 		int i;
-		for(i=1;i<=n;i++)
+		for(i=1;i<n;i++)
 		{
 			int temp=b;
 			b=a+b;
