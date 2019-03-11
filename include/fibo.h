@@ -1,1 +1,0 @@
-int fibo(int n);

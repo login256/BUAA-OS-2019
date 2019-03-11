@@ -1,0 +1,21 @@
+Autotest: Begin at Mon Mar 11 15:10:06 CST 2019
+[32m[ Makefile found. ][0m
+make --directory="code"
+make[1]: Entering directory '/usr/src/workdir/code'
+gcc main.c -c -I "../include/"
+gcc fibo.c -c
+make[1]: Leaving directory '/usr/src/workdir/code'
+gcc ./code/main.o ./code/fibo.o -o fibo
+[32m[ fibo found. ][0m
+[31m[01m[ You have not passed fibo testcase 1/2 ][0m
+[31m[01m[ You have not passed fibo testcase 2/2 ][0m
+[32m[ find your fibo.o ][0m
+[32m[ find your main.o ][0m
+make clean --directory="code"
+make[1]: Entering directory '/usr/src/workdir/code'
+rm *.o
+make[1]: Leaving directory '/usr/src/workdir/code'
+[32m[ make clean can delete fibo.o ][0m
+[32m[ make clean can delete main.o ][0m
+[32m[ find your fibo after make clean ][0m
+[33m[01m[ You got 70 (of 100) this time. Mon Mar 11 15:10:13 CST 2019 ][0m
