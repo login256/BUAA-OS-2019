@@ -9,6 +9,8 @@ machine(
 
 	memory(64)	
 
+	disk("fs.img")
+
 	load("vmlinux")
 
 )

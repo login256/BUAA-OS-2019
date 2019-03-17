@@ -15,7 +15,7 @@
 #include <stdarg.h>
 
 /* this is the maximum width for a variable */
-#define		LP_MAX_BUF	80
+#define		LP_MAX_BUF	1000
 
 /* -*-
  * output function takes an void pointer which is passed in as the
@@ -28,9 +28,9 @@
  * output function cannot assume the buffer is null-terminated after
  * l number of chars.
  */
-void lp_Print(void (*output)(void *, char *, int), 
-	      void * arg,
-	      char *fmt, 
-	      va_list ap);
+void lp_Print(void (*output)(void *, char *, int),
+			  void *arg,
+			  char *fmt,
+			  va_list ap);
 
 #endif
