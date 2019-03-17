@@ -99,7 +99,7 @@ lp_Print(void (*output)(void *, char *, int),
 	width = 0;
 	while (IsDigit(*fmt)) {
 		width = width * 10 + Ctod(*fmt);
-		*fmt++;
+		fmt++;
 	}
 
 	/* check for other prefixes */
@@ -108,7 +108,7 @@ lp_Print(void (*output)(void *, char *, int),
 		fmt ++;
 		while (IsDigit(*fmt)) {
 			prec = prec * 10 + Ctod(*fmt);
-			*fmt++;
+			fmt ++;
 		}
 	} else {
 		prec = 6;
@@ -118,6 +118,7 @@ lp_Print(void (*output)(void *, char *, int),
 	longFlag = 0;
 	if (*fmt == 'l') {
 		longFlag = 1;
+		fmt ++;
 	}
 
 	negFlag = 0;
