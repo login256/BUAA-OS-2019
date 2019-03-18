@@ -1,0 +1,24 @@
+Autotest: Begin at Mon Mar 18 14:55:34 CST 2019
+[32m[ readelf.c found ][0m
+rm -rf *.o
+rm readelf
+rm: cannot remove 'readelf': No such file or directory
+make: *** [clean] Error 1
+Makefile:15: recipe for target 'clean' failed
+gcc -I./ -c main.c
+gcc -I./ -c readelf.c
+gcc main.o readelf.o -o readelf
+[32m[ Compile success! readelf found. ][0m
+[35m[ PASSED:25 ][0m
+[35m[ TOTAL:25 ][0m
+[32m[ You have passed readelf testElf testcase 1/4 ][0m
+[35m[ PASSED:24 ][0m
+[35m[ TOTAL:24 ][0m
+[32m[ You have passed readelf testElf testcase 2/4 ][0m
+[35m[ PASSED:7 ][0m
+[35m[ TOTAL:7 ][0m
+[32m[ You have passed readelf vmlinux testcase 3/4 ][0m
+[35m[ PASSED:9 ][0m
+[35m[ TOTAL:9 ][0m
+[32m[ You have passed readelf vmlinux testcase 4/4 ][0m
+[33m[01m[ You got 100 (of 100) this time. Mon Mar 18 14:55:50 CST 2019 ][0m
