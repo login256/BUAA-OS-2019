@@ -110,7 +110,14 @@
  */
 
 
-#define LIST_INSERT_AFTER(listelm, elm, field)
+#define LIST_INSERT_AFTER(listelm, elm, field) do { \
+               LIST_NEXT((elm), field) = LIST_NEXT((listelm), field); \
+               if (LIST_NEXT((listelm), field)) { \
+                       LIST_NEXT((listelm), field)->field.le_prev = &LIST_NEXT((elm), field); \
+			   } \
+               LIST_NEXT((listelm), field) = (elm); \
+			   (elm)->field.le_prev = &LIST_NEXT((listelm), field); \
+        }while (0);
         // Note: assign a to b <==> a = b
         //Step 1, assign elm.next to listelem.next.
         //Step 2: Judge whether listelm.next is NULL, if not, then assign listelm.pre to a proper value.
@@ -146,8 +153,20 @@
  * The "field" name is the link element as above. You can refer to LIST_INSERT_HEAD.
  * Note: this function has big differences with LIST_INSERT_HEAD !
  */
-#define LIST_INSERT_TAIL(head, elm, field)
-/* finish your code here. */
+#define LIST_INSERT_TAIL(head, elm, field) do { \
+                if (LIST_FIRST((head)) != NULL) { \
+						LIST_NEXT(LIST_NEXT((elm), field), field) = LIST_FIRST((head)); \
+						while (LIST_NEXT(LIST_NEXT((elm), field), field)) {  \
+							LIST_NEXT((elm), field) = LIST_NEXT(LIST_NEXT((elm), field), field) ; \
+						} \
+						LIST_NEXT(LIST_NEXT((elm), field), field) = (elm); \
+						(elm)->field.le_prev = &LIST_NEXT(LIST_NEXT((elm), field), field); \
+						LIST_NEXT((elm), field) = NULL; \
+				} else { \
+						LIST_FIRST((head)) = (elm); \
+						(elm)->field.le_prev = &LIST_FIRST((head)); 	\
+				} \
+        } while (0)
 
 
 #define LIST_NEXT(elm, field)   ((elm)->field.le_next)
