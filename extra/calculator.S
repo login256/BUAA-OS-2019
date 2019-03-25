@@ -18,6 +18,7 @@ loop_begin:
 	nop
 
 sb t1, 0x00(s1)
+
 li t2, 81
 beq t1, t2, calc_close
 nop
@@ -66,8 +67,12 @@ nop
 		mfhi t3
 		addi t3, t3, 48
 		sb t3, 0x00(s1)
+	j while_1
+	nop
 
 	while_1_end:
+	li t3, 10
+	sb t3, 0x00(s1)
 	j next_line;
 	nop
 
@@ -81,8 +86,8 @@ nop
 	li t3, 10
 	mult s2, t3
 	mflo s2
-	addi t3, t2, -48
-	add s2, s2, t2
+	addi t3, t1, -48
+	add s2, s2, t3
 
 j if_end_5
 nop
@@ -91,8 +96,8 @@ second:
 	li t3, 10
 	mult s3, t3
 	mflo s3
-	addi t3, t2, -48
-	add s3, s3, t2
+	addi t3, t1, -48
+	add s3, s3, t3
 if_end_5:
 
 if_end_4:
