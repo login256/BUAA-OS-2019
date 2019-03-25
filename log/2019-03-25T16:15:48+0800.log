@@ -1,0 +1,73 @@
+Autotest: Begin at Mon Mar 25 16:15:48 CST 2019
+[32m[ calculator.S found! ][0m
+Begin build at Mon Mar 25 16:16:19 CST 2019
+Cleanning the project.................
+
+for d in boot drivers extra init lib ;	\
+	do					\
+		make --directory=$d clean; \
+	done; \
+rm -rf *.o *~ gxemul/vmlinux
+make[1]: Entering directory '/usr/src/workdir/boot'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/boot'
+make[1]: Entering directory '/usr/src/workdir/drivers'
+for d in gxconsole; \
+	do				\
+		make --directory=$d clean; \
+	done
+make[2]: Entering directory '/usr/src/workdir/drivers/gxconsole'
+rm -rf *.o *~
+make[2]: Leaving directory '/usr/src/workdir/drivers/gxconsole'
+make[1]: Leaving directory '/usr/src/workdir/drivers'
+make[1]: Entering directory '/usr/src/workdir/extra'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/extra'
+make[1]: Entering directory '/usr/src/workdir/init'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/init'
+make[1]: Entering directory '/usr/src/workdir/lib'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/lib'
+
+Building the project..................
+
+make --directory=boot
+make[1]: Entering directory '/usr/src/workdir/boot'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c start.S 
+make[1]: Leaving directory '/usr/src/workdir/boot'
+make --directory=drivers
+make[1]: Entering directory '/usr/src/workdir/drivers'
+make --directory=gxconsole
+make[2]: Entering directory '/usr/src/workdir/drivers/gxconsole'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC   -c -o console.o console.c
+make[2]: Leaving directory '/usr/src/workdir/drivers/gxconsole'
+make[1]: Leaving directory '/usr/src/workdir/drivers'
+make --directory=extra
+make[1]: Entering directory '/usr/src/workdir/extra'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c calculator.S 
+make[1]: Leaving directory '/usr/src/workdir/extra'
+make --directory=init
+make[1]: Entering directory '/usr/src/workdir/init'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -DFTEST=calculator -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c init.c
+init.c: In function 'mips_init':
+init.c:17: warning: implicit declaration of function 'calculator'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -DFTEST=calculator -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c main.c
+main.c: In function 'main':
+main.c:18: warning: implicit declaration of function 'calculator'
+make[1]: Leaving directory '/usr/src/workdir/init'
+make --directory=lib
+make[1]: Entering directory '/usr/src/workdir/lib'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c print.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c printf.c
+make[1]: Leaving directory '/usr/src/workdir/lib'
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o gxemul/vmlinux -N -T tools/scse0_3.lds boot/start.o extra/calculator.o init/main.o init/init.o drivers/gxconsole/console.o lib/*.o
+
+End build at Mon Mar 25 16:16:34 CST 2019
+[32m[ Build success! ][0m
+[35m[ PASSED:5 ][0m
+[35m[ TOTAL:5 ][0m
+[35m[ Checking for halting the gxconsole............. ][0m
+[32m[ You have halted the gxconsole successfully! ][0m
+[32m[ You have passed all the calculator testcases. ][0m
+[33m[01m[ You got 100 (of 100) this time. Mon Mar 25 16:16:36 CST 2019 ][0m
