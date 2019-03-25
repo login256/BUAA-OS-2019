@@ -6,6 +6,7 @@
 
 drivers_dir	  := drivers
 boot_dir	  := boot
+extra_dir	  := extra
 init_dir	  := init
 lib_dir		  := lib
 tools_dir	  := tools
@@ -14,8 +15,9 @@ vmlinux_elf	  := gxemul/vmlinux
 
 link_script   := $(tools_dir)/scse0_3.lds
 
-modules		  := boot drivers init lib $(test_dir)
+modules		  := boot drivers extra init lib $(test_dir)
 objects		  := $(boot_dir)/start.o			  \
+				 $(extra_dir)/calculator.o		\
 				 $(init_dir)/main.o			  \
 				 $(init_dir)/init.o			  \
 			   	 $(drivers_dir)/gxconsole/console.o \
@@ -42,5 +44,8 @@ clean:
 			$(MAKE) --directory=$$d clean; \
 		done; \
 	rm -rf *.o *~ $(vmlinux_elf)
+
+test: all
+	/OSLAB/gxemul -E testmips -C R3000 -M 64 gxemul/vmlinux
 
 include include.mk
