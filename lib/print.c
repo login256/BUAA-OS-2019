@@ -45,13 +45,17 @@ lp_Print(void (*output)(void *, char *, int),
 
     char c;
     char *s;
+	int *a_int;
+	long int *a_long;
     long int num;
+	int var_for;
 
     int longFlag;
     int negFlag;
     int width;
     int prec;
     int ladjust;
+	int arraySize;
     char padc;
 
     int length;
@@ -84,7 +88,7 @@ lp_Print(void (*output)(void *, char *, int),
 	/* we found a '%' */
 	fmt ++;
 
-	/* check for long */
+	/* check for flags */
 	padc = ' ';
 	ladjust = 0;
 	if (*fmt == '-') {
@@ -114,7 +118,17 @@ lp_Print(void (*output)(void *, char *, int),
 		prec = 6;
 	}
 
-	/* check format flag */
+	/* check for arraySize */
+	arraySize = 0;
+	if (*fmt == '#'){
+		fmt ++;
+		while (IsDigit(*fmt)) {
+			arraySize = arraySize * 10 + Ctod(*fmt);
+			fmt ++;
+		}
+	}
+
+	/* check format long */
 	longFlag = 0;
 	if (*fmt == 'l') {
 		longFlag = 1;
@@ -202,128 +216,161 @@ lp_Print(void (*output)(void *, char *, int),
 	    OUTPUT(arg, buf, length);
 	    break;
 
+	 case 'a':
+	 case 'A':
+		if (longFlag) {
+			a_long = va_arg(ap, long int*);
+		}
+		else {
+			a_int = va_arg(ap, int*);
+		}
+		length = PrintChar(buf, '{', 1, 0);
+		OUTPUT(arg, buf, length);
+		for (var_for = 0; var_for < arraySize; var_for++)
+		{
+			if (longFlag) { 
+				num = a_long[var_for];
+			} else { 
+				num = a_int[var_for]; 
+			}
+			negFlag = 0;
+			if (num < 0) {
+				num = - num;
+				negFlag = 1;
+			}
+			length = PrintNum(buf, num, 10, negFlag, width, ladjust, padc, 0);
+			OUTPUT(arg, buf, length);
+			if (var_for != arraySize - 1)
+			{
+				length = PrintChar(buf, ',', 1, 0);
+				OUTPUT(arg, buf, length);
+			}
+		}
+		length = PrintChar(buf, '}', 1, 0);
+		OUTPUT(arg, buf, length);
+		break;
 	 case '\0':
-	    fmt --;
-	    break;
+		fmt --;
+		break;
 
 	 default:
-	    /* output this char as it is */
-	    OUTPUT(arg, fmt, 1);
+		/* output this char as it is */
+		OUTPUT(arg, fmt, 1);
 	}	/* switch (*fmt) */
 
 	fmt ++;
-    }		/* for(;;) */
+	}		/* for(;;) */
 
-    /* special termination call */
-    OUTPUT(arg, "\0", 1);
+	/* special termination call */
+	OUTPUT(arg, "\0", 1);
 }
 
 
 /* --------------- local help functions --------------------- */
-int
+	int
 PrintChar(char * buf, char c, int length, int ladjust)
 {
-    int i;
-    
-    if (length < 1) length = 1;
-    if (ladjust) {
-	*buf = c;
-	for (i=1; i< length; i++) buf[i] = ' ';
-    } else {
-	for (i=0; i< length-1; i++) buf[i] = ' ';
-	buf[length - 1] = c;
-    }
-    return length;
+	int i;
+
+	if (length < 1) length = 1;
+	if (ladjust) {
+		*buf = c;
+		for (i=1; i< length; i++) buf[i] = ' ';
+	} else {
+		for (i=0; i< length-1; i++) buf[i] = ' ';
+		buf[length - 1] = c;
+	}
+	return length;
 }
 
-int
+	int
 PrintString(char * buf, char* s, int length, int ladjust)
 {
-    int i;
-    int len=0;
-    char* s1 = s;
-    while (*s1++) len++;
-    if (length < len) length = len;
+	int i;
+	int len=0;
+	char* s1 = s;
+	while (*s1++) len++;
+	if (length < len) length = len;
 
-    if (ladjust) {
-	for (i=0; i< len; i++) buf[i] = s[i];
-	for (i=len; i< length; i++) buf[i] = ' ';
-    } else {
-	for (i=0; i< length-len; i++) buf[i] = ' ';
-	for (i=length-len; i < length; i++) buf[i] = s[i-length+len];
-    }
-    return length;
+	if (ladjust) {
+		for (i=0; i< len; i++) buf[i] = s[i];
+		for (i=len; i< length; i++) buf[i] = ' ';
+	} else {
+		for (i=0; i< length-len; i++) buf[i] = ' ';
+		for (i=length-len; i < length; i++) buf[i] = s[i-length+len];
+	}
+	return length;
 }
 
-int
+	int
 PrintNum(char * buf, unsigned long u, int base, int negFlag, 
-	 int length, int ladjust, char padc, int upcase)
+		int length, int ladjust, char padc, int upcase)
 {
-    /* algorithm :
-     *  1. prints the number from left to right in reverse form.
-     *  2. fill the remaining spaces with padc if length is longer than
-     *     the actual length
-     *     TRICKY : if left adjusted, no "0" padding.
-     *		    if negtive, insert  "0" padding between "0" and number.
-     *  3. if (!ladjust) we reverse the whole string including paddings
-     *  4. otherwise we only reverse the actual string representing the num.
-     */
+	/* algorithm :
+	 *  1. prints the number from left to right in reverse form.
+	 *  2. fill the remaining spaces with padc if length is longer than
+	 *     the actual length
+	 *     TRICKY : if left adjusted, no "0" padding.
+	 *		    if negtive, insert  "0" padding between "0" and number.
+	 *  3. if (!ladjust) we reverse the whole string including paddings
+	 *  4. otherwise we only reverse the actual string representing the num.
+	 */
 
-    int actualLength =0;
-    char *p = buf;
-    int i;
+	int actualLength =0;
+	char *p = buf;
+	int i;
 
-    do {
-	int tmp = u %base;
-	if (tmp <= 9) {
-	    *p++ = '0' + tmp;
-	} else if (upcase) {
-	    *p++ = 'A' + tmp - 10;
-	} else {
-	    *p++ = 'a' + tmp - 10;
+	do {
+		int tmp = u %base;
+		if (tmp <= 9) {
+			*p++ = '0' + tmp;
+		} else if (upcase) {
+			*p++ = 'A' + tmp - 10;
+		} else {
+			*p++ = 'a' + tmp - 10;
+		}
+		u /= base;
+	} while (u != 0);
+
+	if (negFlag) {
+		*p++ = '-';
 	}
-	u /= base;
-    } while (u != 0);
 
-    if (negFlag) {
-	*p++ = '-';
-    }
+	/* figure out actual length and adjust the maximum length */
+	actualLength = p - buf;
+	if (length < actualLength) length = actualLength;
 
-    /* figure out actual length and adjust the maximum length */
-    actualLength = p - buf;
-    if (length < actualLength) length = actualLength;
-
-    /* add padding */
-    if (ladjust) {
-	padc = ' ';
-    }
-    if (negFlag && !ladjust && (padc == '0')) {
-	for (i = actualLength-1; i< length-1; i++) buf[i] = padc;
-	buf[length -1] = '-';
-    } else {
-	for (i = actualLength; i< length; i++) buf[i] = padc;
-    }
-	    
-
-    /* prepare to reverse the string */
-    {
-	int begin = 0;
-	int end;
+	/* add padding */
 	if (ladjust) {
-	    end = actualLength - 1;
+		padc = ' ';
+	}
+	if (negFlag && !ladjust && (padc == '0')) {
+		for (i = actualLength-1; i< length-1; i++) buf[i] = padc;
+		buf[length -1] = '-';
 	} else {
-	    end = length -1;
+		for (i = actualLength; i< length; i++) buf[i] = padc;
 	}
 
-	while (end > begin) {
-	    char tmp = buf[begin];
-	    buf[begin] = buf[end];
-	    buf[end] = tmp;
-	    begin ++;
-	    end --;
-	}
-    }
 
-    /* adjust the string pointer */
-    return length;
+	/* prepare to reverse the string */
+	{
+		int begin = 0;
+		int end;
+		if (ladjust) {
+			end = actualLength - 1;
+		} else {
+			end = length -1;
+		}
+
+		while (end > begin) {
+			char tmp = buf[begin];
+			buf[begin] = buf[end];
+			buf[end] = tmp;
+			begin ++;
+			end --;
+		}
+	}
+
+	/* adjust the string pointer */
+	return length;
 }
