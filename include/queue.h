@@ -117,7 +117,7 @@
 			   } \
                LIST_NEXT((listelm), field) = (elm); \
 			   (elm)->field.le_prev = &LIST_NEXT((listelm), field); \
-        }while (0);
+        }while (0)
         // Note: assign a to b <==> a = b
         //Step 1, assign elm.next to listelem.next.
         //Step 2: Judge whether listelm.next is NULL, if not, then assign listelm.pre to a proper value.
@@ -155,16 +155,15 @@
  */
 #define LIST_INSERT_TAIL(head, elm, field) do { \
                 if (LIST_FIRST((head)) != NULL) { \
-						LIST_NEXT(LIST_NEXT((elm), field), field) = LIST_FIRST((head)); \
-						while (LIST_NEXT(LIST_NEXT((elm), field), field)) {  \
-							LIST_NEXT((elm), field) = LIST_NEXT(LIST_NEXT((elm), field), field) ; \
+						LIST_NEXT((elm), field) = LIST_FIRST((head)); \
+						while (LIST_NEXT(LIST_NEXT((elm), field), field) != NULL) {  \
+							LIST_NEXT((elm), field) = LIST_NEXT(LIST_NEXT((elm), field), field); \
 						} \
 						LIST_NEXT(LIST_NEXT((elm), field), field) = (elm); \
 						(elm)->field.le_prev = &LIST_NEXT(LIST_NEXT((elm), field), field); \
 						LIST_NEXT((elm), field) = NULL; \
 				} else { \
-						LIST_FIRST((head)) = (elm); \
-						(elm)->field.le_prev = &LIST_FIRST((head)); 	\
+					LIST_INSERT_HEAD((head), (elm), field); \
 				} \
         } while (0)
 

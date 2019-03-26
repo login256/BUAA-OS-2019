@@ -192,13 +192,21 @@ page_init(void)
 	}
 
     /* Step 4: Mark the other memory as free. */
+	/*
 	pa2page(PADDR(freemem))->pp_ref = 0;
 	LIST_INSERT_HEAD(&page_free_list, pa2page(PADDR(freemem)), pp_link);
-	last=&pages[PPN(PADDR(freemem)) + 1];
+	last=&pages[PPN(PADDR(freemem))];
 	for (now = &pages[PPN(PADDR(freemem))+1]; page2ppn(now) < npage; now++)
 	{
 		now->pp_ref = 0;
 		LIST_INSERT_AFTER(last, now, pp_link);
+		last=now;
+	}
+	*/
+	for (now = &pages[PPN(PADDR(freemem))]; page2ppn(now) < npage; now++)
+	{
+		now->pp_ref = 0;
+		LIST_INSERT_HEAD(&page_free_list, now, pp_link);
 	}
 }
 
@@ -222,12 +230,18 @@ page_alloc(struct Page **pp)
     struct Page *ppage_temp;
 
     /* Step 1: Get a page from free memory. If fails, return the error code.*/
-
+	if (LIST_EMPTY(&page_free_list)) {
+		return -E_NO_MEM;
+	}
+	ppage_temp = LIST_FIRST(&page_free_list);
+	LIST_REMOVE(ppage_temp, pp_link);
 
     /* Step 2: Initialize this page.
      * Hint: use `bzero`. */
+	bzero(page2kva(ppage_temp), BY2PG);
 
-
+	*pp = ppage_temp;
+	return 0;
 }
 
 /*Overview:
@@ -238,10 +252,17 @@ void
 page_free(struct Page *pp)
 {
     /* Step 1: If there's still virtual address refers to this page, do nothing. */
-
+	if (pp->pp_ref > 0)
+	{
+		return;
+	}
 
     /* Step 2: If the `pp_ref` reaches to 0, mark this page as free and return. */
-
+	if (pp->pp_ref == 0)
+	{
+		LIST_INSERT_HEAD(&page_free_list, pp, pp_link);
+		return;
+	}
 
     /* If the value of `pp_ref` less than 0, some error must occurred before,
      * so PANIC !!! */
@@ -426,11 +447,9 @@ physical_memory_manage_check(void)
     assert(page_alloc(&pp0) == 0);
     assert(page_alloc(&pp1) == 0);
     assert(page_alloc(&pp2) == 0);
-
     assert(pp0);
     assert(pp1 && pp1 != pp0);
     assert(pp2 && pp2 != pp1 && pp2 != pp0);
-
 
 
     // temporarily steal the rest of the free pages
@@ -491,7 +510,6 @@ physical_memory_manage_check(void)
 	int answer2[]={0,1,2,3,4,20,5,6,7,8,9};
 	q=(struct Page *)alloc(sizeof(struct Page), BY2PG, 1);
 	q->pp_ref = 20;
-
 	//printf("---%d\n",test_pages[4].pp_ref);
 	LIST_INSERT_AFTER(&test_pages[4], q, pp_link);
 	//printf("---%d\n",LIST_NEXT(&test_pages[4],pp_link)->pp_ref);
