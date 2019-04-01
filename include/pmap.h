@@ -7,6 +7,9 @@
 #include "printf.h"
 
 
+void pm_check(void);
+void test_alloc();
+
 LIST_HEAD(Page_list, Page);
 typedef LIST_ENTRY(Page) Page_LIST_entry_t;
 

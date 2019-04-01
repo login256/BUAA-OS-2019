@@ -16,7 +16,7 @@ Pde *boot_pgdir;
 struct Page *pages;
 static u_long freemem;
 
-static struct Page_list page_free_list;	/* Free list of physical pages */
+struct Page_list page_free_list;	/* Free list of physical pages */
 
 
 /* Overview:
@@ -53,17 +53,19 @@ static void *alloc(u_int n, u_int align, int clear)
     /* Initialize `freemem` if this is the first time. The first virtual address that the
      * linker did *not* assign to any kernel code or global variables. */
     if (freemem == 0) {
-        freemem = (u_long)end;
+        freemem = (u_long)(maxpa + ULIM);
     }
 
     /* Step 1: Round up `freemem` up to be aligned properly */
-    freemem = ROUND(freemem, align);
-
     /* Step 2: Save current value of `freemem` as allocated chunk. */
-    alloced_mem = freemem;
+    alloced_mem = freemem - n;
+	if (alloced_mem != ROUND(alloced_mem, align))
+	{
+		alloced_mem = ROUND(alloced_mem, align) - align;
+	}
 
     /* Step 3: Increase `freemem` to record allocation. */
-    freemem = freemem + n;
+	freemem = alloced_mem;
 
     /* Step 4: Clear allocated chunk if parameter `clear` is set. */
     if (clear) {
@@ -71,7 +73,7 @@ static void *alloc(u_int n, u_int align, int clear)
     }
 
     // We're out of memory, PANIC !!
-    if (PADDR(freemem) >= maxpa) {
+    if (freemem <= end) {
         panic("out of memorty\n");
         return (void *)-E_NO_MEM;
     }
@@ -204,7 +206,8 @@ page_init(void)
      * filed to 1) */
 	for (now = pages; page2kva(now) < freemem; now++)
 	{
-		now->pp_ref = 1;
+		now->pp_ref = 0;
+		LIST_INSERT_HEAD(&page_free_list, now, pp_link);
 	}
 
     /* Step 4: Mark the other memory as free. */
@@ -221,8 +224,7 @@ page_init(void)
 	*/
 	for (now = &pages[PPN(PADDR(freemem))]; page2ppn(now) < npage; now++)
 	{
-		now->pp_ref = 0;
-		LIST_INSERT_HEAD(&page_free_list, now, pp_link);
+		now->pp_ref = 1;
 	}
 }
 
