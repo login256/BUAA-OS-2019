@@ -99,10 +99,17 @@ static Pte *boot_pgdir_walk(Pde *pgdir, u_long va, int create)
     /* Step 2: If the corresponding page table is not exist and parameter `create`
      * is set, create one. And set the correct permission bits for this new page
      * table. */
-	if (create && !((*pgdir_entryp) & PTE_V)) 
+	if (!((*pgdir_entryp) & PTE_V)) 
 	{
-		*pgdir_entryp = PADDR(alloc(BY2PG, BY2PG, 1));
-		*pgdir_entryp = (*pgdir_entryp) | PTE_V | PTE_R;
+		if(create)
+		{
+			*pgdir_entryp = PADDR(alloc(BY2PG, BY2PG, 1));
+			*pgdir_entryp = (*pgdir_entryp) | PTE_V | PTE_R;
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	pgtable = (Pte *) KADDR(PTE_ADDR(*pgdir_entryp)); // maybe step1's hint in wrong place
