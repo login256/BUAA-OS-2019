@@ -6,6 +6,9 @@
 #include "mmu.h"
 #include "printf.h"
 
+void test_queue();
+void pm_check();
+void get_page_status(int);
 
 LIST_HEAD(Page_list, Page);
 typedef LIST_ENTRY(Page) Page_LIST_entry_t;

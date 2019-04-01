@@ -208,22 +208,58 @@ page_init(void)
 	}
 
     /* Step 4: Mark the other memory as free. */
-	/*
-	pa2page(PADDR(freemem))->pp_ref = 0;
-	LIST_INSERT_HEAD(&page_free_list, pa2page(PADDR(freemem)), pp_link);
-	last=&pages[PPN(PADDR(freemem))];
-	for (now = &pages[PPN(PADDR(freemem))+1]; page2ppn(now) < npage; now++)
+	now=pa2page(PADDR(freemem));
+	now->pp_ref = 0;
+	LIST_INSERT_HEAD(&page_free_list, now, pp_link);
+	last = now;
+	for (now++ ; page2ppn(now) < npage; now++)
 	{
 		now->pp_ref = 0;
 		LIST_INSERT_AFTER(last, now, pp_link);
 		last=now;
 	}
-	*/
+	/*
 	for (now = &pages[PPN(PADDR(freemem))]; page2ppn(now) < npage; now++)
 	{
 		now->pp_ref = 0;
 		LIST_INSERT_HEAD(&page_free_list, now, pp_link);
+		//LIST_INSERT_TAIL(&page_free_list, now, pp_link);
 	}
+	*/
+}
+
+int exam_times = 0;
+void get_page_status(int pa)
+{
+	struct Page *pp = pa2page(pa);
+	struct Page *page_in_list;
+	int is_free = 0;
+	int status;
+	LIST_FOREACH(page_in_list, &page_free_list, pp_link)
+	{
+		if(page_in_list == pp)
+		{
+			is_free = 1;
+			break;
+		}
+	}
+	exam_times++;
+	if(is_free)
+	{
+		status = 1;
+	}
+	else
+	{
+		if(pp->pp_ref == 0)
+		{
+			status = 2;
+		}
+		else
+		{
+			status = 3;
+		}
+	}
+	printf("times:%d,page status:%d\n",exam_times,status);
 }
 
 /*Overview:
