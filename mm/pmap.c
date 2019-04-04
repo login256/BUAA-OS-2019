@@ -209,10 +209,11 @@ page_init(void)
 
     /* Step 4: Mark the other memory as free. */
 	/*
-	pa2page(PADDR(freemem))->pp_ref = 0;
-	LIST_INSERT_HEAD(&page_free_list, pa2page(PADDR(freemem)), pp_link);
-	last=&pages[PPN(PADDR(freemem))];
-	for (now = &pages[PPN(PADDR(freemem))+1]; page2ppn(now) < npage; now++)
+	now=pa2page(PADDR(freemem));
+	now->pp_ref = 0;
+	LIST_INSERT_HEAD(&page_free_list, now, pp_link);
+	last = now;
+	for (now++ ; page2ppn(now) < npage; now++)
 	{
 		now->pp_ref = 0;
 		LIST_INSERT_AFTER(last, now, pp_link);
