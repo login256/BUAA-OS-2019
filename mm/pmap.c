@@ -220,6 +220,7 @@ page_init(void)
 		last=now;
 	}
 	*/
+
 	for (now = &pages[PPN(PADDR(freemem))]; page2ppn(now) < npage; now++)
 	{
 		now->pp_ref = 0;
