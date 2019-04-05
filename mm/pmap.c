@@ -158,6 +158,7 @@ void mips_vm_init()
     Pde *pgdir;
     u_int n;
 
+
     /* Step 1: Allocate a page for page directory(first level page table). */
     pgdir = alloc(BY2PG, BY2PG, 1);
     printf("to memory %x for struct page directory.\n", freemem);
