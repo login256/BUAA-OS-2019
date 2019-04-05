@@ -14,10 +14,26 @@
 
 
 #define	PUTCHAR_ADDRESS		(PHYSADDR_OFFSET +		\
-							 DEV_CONS_ADDRESS + DEV_CONS_PUTGETCHAR)
+				DEV_CONS_ADDRESS + DEV_CONS_PUTGETCHAR)
+#define	HALT_ADDRESS		(PHYSADDR_OFFSET +		\
+				DEV_CONS_ADDRESS + DEV_CONS_HALT)
+
 
 void printcharc(char ch)
 {
 	*((volatile unsigned char *) PUTCHAR_ADDRESS) = ch;
+}
+
+
+void halt(void)
+{
+	*((volatile unsigned char *) HALT_ADDRESS) = 0;
+}
+
+
+void printstr(char *s)
+{
+	while (*s)
+		printcharc(*s++);
 }
 
