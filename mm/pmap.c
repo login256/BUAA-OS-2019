@@ -25,7 +25,7 @@ u_long cal_page(int taskKind, u_long va, int n, Pde *pgdir)
 	int x;
 	if (taskKind == 1)
 	{
-		return va+((va>>12)<<2);
+		//return va+((va>>12)<<2);
 	}
 	else if (taskKind == 2)
 	{
@@ -36,7 +36,7 @@ u_long cal_page(int taskKind, u_long va, int n, Pde *pgdir)
 		//x = (va-((va>>22)<<22))>>12;
 		x=va>>22;
 		pgdir_entry = &pgdir[x];
-		*pgdir_entry = (PADDR(va+((va>>12)<<2)))|PTE_V;
+		*pgdir_entry = (PADDR(pgdir))|PTE_V;
 		return 0;
 	}
 }
