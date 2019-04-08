@@ -22,20 +22,22 @@ struct Page_list page_free_list;	/* Free list of physical pages */
 u_long cal_page(int taskKind, u_long va, int n, Pde *pgdir)
 {
 	Pde *pgdir_entry;
+	int x;
 	if (taskKind == 1)
 	{
 		return va+((va>>12)<<2);
 	}
 	else if (taskKind == 2)
 	{
-		return ((va>>20)<<20)+n*4096;
-	}
+		return ((va>>22)<<22)+n*4096;
+	}/*
 	else if (taskKind == 3)
 	{
-		pgdir_entry = (pgdir+((va-(((u_long)pgdir>>20)<<20))>>12));
+		x = ((va-(((u_long)pgdir>>22)<<22))>>12);
+		pgdir_entry = pgdir+x;
 		*pgdir_entry = (PADDR(va))|PTE_V;
 		return 0;
-	}
+	}*/
 }
 
 /* Overview:
