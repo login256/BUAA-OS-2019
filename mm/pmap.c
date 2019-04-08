@@ -27,7 +27,7 @@ void count_page(Pde *pgdir, int *cnt,int size)
 	{
 		cnt[i] = 0;
 	}
-	//cnt[PPN(PADDR(pgdir))]++;
+	cnt[PPN(PADDR(pgdir))]++;
 	for (i = 0; i < PTE2PT; i++)
 	{
 		pgdir_entry = pgdir + i;
@@ -35,7 +35,7 @@ void count_page(Pde *pgdir, int *cnt,int size)
 		{
 			cnt[PPN(*pgdir_entry)]++;
 			pgtab = KADDR(PTE_ADDR(*pgdir_entry));
-			for (j = 0; j < PTE2PT; i++)
+			for (j = 0; j < PTE2PT; j++)
 			{
 				*pgtab_entry = pgtab + j;
 				if((*pgtab_entry)&PTE_V)
