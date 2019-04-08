@@ -18,6 +18,35 @@ static u_long freemem;
 
 static struct Page_list page_free_list;	/* Free list of physical pages */
 
+void count_page(Pde *pgdir, int *cnt,int size)
+{
+	Pde *pgdir_entry;
+	Pte *pgtab, *pgtab_entry;
+	int i, j;
+	for (i = 0; i < size; i++)
+	{
+		cnt[i] = 0;
+	}
+	cnt[PPN(PADDR(pgdir))]++;
+	for (i = 0; i < PTE2PT; i++)
+	{
+		pgdir_entry = pgdir + i;
+		if((*pgdir_entry)&PTE_V)
+		{
+			cnt[PPN(*pgdir_entry)]++;
+			pgtab = KADDR(PTE_ADDR(*pgdir_entry));
+			for (j = 0; j < PTE2PT; i++)
+			{
+				*pgtab_entry = pgtab + j;
+				if((*pgtab_entry)&PTE_V)
+				{
+					cnt[PPN(*pgtab_entry)]++;
+				}
+			}
+		}
+	}
+	return;
+}
 
 /* Overview:
  	Initialize basemem and npage.

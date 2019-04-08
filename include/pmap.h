@@ -6,6 +6,7 @@
 #include "mmu.h"
 #include "printf.h"
 
+void count_page(Pde *pgdir, int *cnt, int size);
 
 LIST_HEAD(Page_list, Page);
 typedef LIST_ENTRY(Page) Page_LIST_entry_t;
