@@ -25,7 +25,7 @@ u_long cal_page(int taskKind, u_long va, int n, Pde *pgdir)
 	int x;
 	if (taskKind == 1)
 	{
-		//return va+((va>>12)<<2);
+		return va+((va>>12)<<2);
 	}
 	else if (taskKind == 2)
 	{
