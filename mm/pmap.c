@@ -37,7 +37,7 @@ void count_page(Pde *pgdir, int *cnt,int size)
 			pgtab = KADDR(PTE_ADDR(*pgdir_entry));
 			for (j = 0; j < PTE2PT; j++)
 			{
-				*pgtab_entry = pgtab + j;
+				pgtab_entry = pgtab + j;
 				if((*pgtab_entry)&PTE_V)
 				{
 					cnt[PPN(*pgtab_entry)]++;
@@ -137,7 +137,7 @@ static Pte *boot_pgdir_walk(Pde *pgdir, u_long va, int create)
 		}
 		else
 		{
-			//return 0;
+			return 0;
 		}
 	}
 
@@ -362,8 +362,8 @@ pgdir_walk(Pde *pgdir, u_long va, int create, Pte **ppte)
 		}
 		else
 		{
-			//*ppte = 0;
-			//return 0;
+			*ppte = 0;
+			return 0;
 		}
 	}
 	pgtable = (Pte *) KADDR(PTE_ADDR(*pgdir_entryp)); 

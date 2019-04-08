@@ -4,8 +4,12 @@
 #include <printf.h>
 #include <trap.h>
 
+static int cnt[1<<14];
+extern Pde *boot_pgdir;
+
 void mips_init()
 {
+	int i;
 	printf("init.c:\tmips_init() is called\n");
 
 	// Lab 2 memory management initialization functions
@@ -15,7 +19,11 @@ void mips_init()
 
 	//physical_memory_manage_check();
     page_check();
-
+	//count_page(boot_pgdir, cnt, 1<<14);
+	for (i = 0; i< (1<<14) ;i++)
+	{
+	//	printf("%d:%d\n",i,cnt[i]);
+	}
 	panic("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
 	while (1);
