@@ -13,7 +13,7 @@ struct Env *envs = NULL;		// All environments
 struct Env *curenv = NULL;	        // the current env
 
 static struct Env_list env_free_list;	// Free list
-truct Env_list env_sched_list[2];      // Runnable list
+struct Env_list env_sched_list[2];      // Runnable list
 
 extern Pde *boot_pgdir;
 extern char *KERNEL_SP;
@@ -57,7 +57,7 @@ int envid2env(u_int envid, struct Env **penv, int checkperm)
     /* Hint:
  *      *  If envid is zero, return the current environment.*/
     /*Step 1: Assign value to e using envid. */
-
+		e = envs + ENVX(envid);
 
 
         if (e->env_status == ENV_FREE || e->env_id != envid) {
@@ -71,9 +71,14 @@ int envid2env(u_int envid, struct Env **penv, int checkperm)
  *                     *  must be either the current environment.
  *                          *  or an immediate child of the current environment.If not, error! */
     /*Step 2: Make a check according to checkperm. */
-
-
-
+		if(checkperm)
+		{
+			if (e != curenv && e->env_parent_id != curenv->env_id)
+			{
+				*penv = 0;
+				return -E_BAD_ENV;
+			}
+		}
 
         *penv = e;
         return 0;
@@ -92,11 +97,15 @@ env_init(void)
 {
 	int i;
     /*Step 1: Initial env_free_list. */
-
+	LIST_INIT(&env_free_list);
 
     /*Step 2: Travel the elements in 'envs', init every element(mainly initial its status, mark it as free)
      * and inserts them into the env_free_list as reverse order. */
-
+	for (i = 0; i < NENV; i++)
+	{
+		envs[i].status = ENV_FREE;
+		LIST_INSERT_HEAD(&env_free_list, &envs[i], env_link);
+	}
 
 }
 
@@ -184,7 +193,7 @@ env_alloc(struct Env **new, u_int parent_id)
 	struct Env *e;
     
     /*Step 1: Get a new Env from env_free_list*/
-
+	e = LIST_FIRST(&env_free_list);
     
     /*Step 2: Call certain function(has been implemented) to init kernel memory layout for this new Env.
      *The function mainly maps the kernel address to this new Env address. */
