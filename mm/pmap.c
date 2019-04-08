@@ -16,7 +16,7 @@ Pde *boot_pgdir;
 struct Page *pages;
 static u_long freemem;
 
-static struct Page_list page_free_list;	/* Free list of physical pages */
+struct Page_list page_free_list;	/* Free list of physical pages */
 
 void count_page(Pde *pgdir, int *cnt,int size)
 {
