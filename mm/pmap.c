@@ -29,7 +29,7 @@ u_long cal_page(int taskKind, u_long va, int n, Pde *pgdir)
 	}
 	else if (taskKind == 2)
 	{
-		return ((va>>22)<<22)+(n-1)*4096;
+		return ((va>>22)<<22)+(n<<12);
 	}
 	else if (taskKind == 3)
 	{
