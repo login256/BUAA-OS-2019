@@ -34,6 +34,7 @@ u_long cal_page(int taskKind, u_long va, int n, Pde *pgdir)
 	{
 		pgdir_entry = (pgdir+((va-(((u_long)pgdir>>22)<<10))>>12));
 		*pgdir_entry = (PADDR(va))|PTE_V;
+		return 0;
 	}
 }
 
