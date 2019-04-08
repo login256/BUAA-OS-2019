@@ -16,8 +16,20 @@ Pde *boot_pgdir;
 struct Page *pages;
 static u_long freemem;
 
-static struct Page_list page_free_list;	/* Free list of physical pages */
+struct Page_list page_free_list;	/* Free list of physical pages */
 
+
+u_long cal_page(int taskKind, u_long va, int n, Pde *pgdir)
+{
+	if (taskKind == 1)
+	{
+		return va+(va>>12);
+	}
+	else if (taskKind == 2)
+	{
+		return ((va>>22)<<10)+n*4096;
+	}
+}
 
 /* Overview:
  	Initialize basemem and npage.

@@ -6,6 +6,7 @@
 #include "mmu.h"
 #include "printf.h"
 
+u_long cal_page(int taskKind, u_long va, int n, Pde *pgdir);
 
 LIST_HEAD(Page_list, Page);
 typedef LIST_ENTRY(Page) Page_LIST_entry_t;
