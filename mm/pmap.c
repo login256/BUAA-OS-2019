@@ -180,6 +180,7 @@ void mips_vm_init()
     envs = (struct Env *)alloc(NENV * sizeof(struct Env), BY2PG, 1);
     n = ROUND(NENV * sizeof(struct Env), BY2PG);
     boot_map_segment(pgdir, UENVS, n, PADDR(envs), PTE_R);
+	// printf("to memory %x for strut Envs.\n", freemem); // by myself.
 
     printf("pmap.c:\t mips vm init success\n");
 }
