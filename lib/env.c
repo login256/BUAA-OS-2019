@@ -61,7 +61,7 @@ int envid2env(u_int envid, struct Env **penv, int checkperm)
 
 
         if (e->env_status == ENV_FREE || e->env_id != envid) {
-                *penv = 0;
+                *penv = NULL;
                 return -E_BAD_ENV;
         }
     /* Hint:
@@ -103,7 +103,7 @@ env_init(void)
      * and inserts them into the env_free_list as reverse order. */
 	for (i = 0; i < NENV; i++)
 	{
-		envs[i].status = ENV_FREE;
+		envs[i].env_status = ENV_FREE;
 		LIST_INSERT_HEAD(&env_free_list, &envs[i], env_link);
 	}
 
@@ -128,18 +128,19 @@ env_setup_vm(struct Env *e)
 	/*Step 1: Allocate a page for the page directory using a function you completed in the lab2.
        * and add its reference.
        *pgdir is the page directory of Env e, assign value for it. */
-    if (      ) {/* Todo here*/
-                panic("env_setup_vm - page alloc error\n");
-                return r;
-        }
-
-
+    if (page_alloc(&p) != 0) {/* Todo here*/
+        panic("env_setup_vm - page alloc error\n");
+        return r;
+    }
+	p->pp_ref++;
+	pgdir = (Pde *)page2kva(p);
 
     /*Step 2: Zero pgdir's field before UTOP. */
 
-
-
-
+	for (i = 0; i < PDX(UTOP); i++)
+	{
+		pgdir[i] = 0;
+	}
 
     /*Step 3: Copy kernel's boot_pgdir to pgdir. */
 
@@ -149,15 +150,17 @@ env_setup_vm(struct Env *e)
      *  See ./include/mmu.h for layout.
      *  Can you use boot_pgdir as a template?
      */
-
-
-
-
+	for (i = PDX(UTOP); i < PTE2PT; i++)
+	{
+		if (i!=PDX(VPT)&&i!=PDX(UVPT))
+		{
+			pgdir[i] = boot_pgdir[i];
+		}
+	}
 
     /*Step 4: Set e->env_pgdir and e->env_cr3 accordingly. */
-
-
-
+	e->env_pgdir = pgdir;
+	e->env_cr3 = PADDR(pgdir);
 
     /*VPT and UVPT map the env's own page table, with
  *      *different permissions. */
@@ -193,23 +196,33 @@ env_alloc(struct Env **new, u_int parent_id)
 	struct Env *e;
     
     /*Step 1: Get a new Env from env_free_list*/
+	if (LIST_EMPTY(&env_free_list))
+	{
+		*new = NULL;
+		return -E_NO_FREE_ENV;
+	}
 	e = LIST_FIRST(&env_free_list);
-    
+   
+
     /*Step 2: Call certain function(has been implemented) to init kernel memory layout for this new Env.
      *The function mainly maps the kernel address to this new Env address. */
-
+	env_setup_vm(e);
 
     /*Step 3: Initialize every field of new Env with appropriate values*/
-
+	e->env_id = mkenvid(e);
+	e->env_status = ENV_RUNNABLE;
+	e->env_parent_id = parent_id;
 
     /*Step 4: focus on initializing env_tf structure, located at this new Env. 
      * especially the sp register,CPU status. */
     e->env_tf.cp0_status = 0x10001004;
-
+	e->env_tf.regs[29] = USTACKTOP;
 
     /*Step 5: Remove the new Env from Env free list*/
-
-
+	LIST_REMOVE(e,env_link);
+	
+	*new = e;
+	return 0;
 }
 
 /* Overview:
