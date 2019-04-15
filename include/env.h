@@ -59,6 +59,8 @@ void env_destroy(struct Env *e);
 int envid2env(u_int envid, struct Env **penv, int checkperm);
 void env_run(struct Env *e);
 
+int check_same_root(u_int envid1, u_int envid2);
+void kill_all(u_int envid);
 
 // for the grading script
 #define ENV_CREATE2(x, y) \

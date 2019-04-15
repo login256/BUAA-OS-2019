@@ -18,6 +18,97 @@ struct Env_list env_sched_list[2];      // Runnable list
 extern Pde *boot_pgdir;
 extern char *KERNEL_SP;
 
+int check_same_root(u_int envid1, u_int envid2)
+{
+	struct Env *now1, *now2;
+	envid2env(envid1, &now1, 0);
+	envid2env(envid2, &now2, 0);
+	if (now1->env_status == ENV_NOT_RUNNABLE || now2->env_status == ENV_NOT_RUNNABLE)
+	{
+		return -1;
+	}
+	while(now1->env_parent_id != 0)
+	{
+		envid2env(now1->env_parent_id, &now1, 0);
+	}
+	while(now2->env_parent_id != 0)
+	{
+		envid2env(now2->env_parent_id, &now2, 0);
+	}
+	if (now1 == now2)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+int fa[NENV];
+int findfa(int i)
+{
+	return fa[i] == i ? i : (fa[i] = findfa(fa[i]));
+}
+
+void kill_all(u_int envid)
+{
+	int i, par;
+	int now;
+	struct Env *e;
+	int r;
+	now = ENVX(envid);
+	for (i = 0; i < NENV; i++)
+	{
+		fa[i]=i;
+	}
+	for (i = 0; i < NENV; i++)
+	{
+		e = envs + i;
+		if (e->env_status != ENV_FREE)
+		{
+			if (e->env_parent_id)
+			{
+				par = ENVX(e->env_parent_id);
+				findfa(par);
+				findfa(i);
+				fa[fa[i]] = fa[par];
+			}
+		}
+	}
+	int has = 0;
+	for (i = 0; i < NENV; i++)
+	{
+		findfa(i);
+		findfa(now);
+		if(fa[now] == fa[i])
+		{
+			e = envs + i;
+			if (e->env_status == ENV_NOT_RUNNABLE)
+			{
+				has = 1;
+				break;
+			}
+		}
+	}
+	if (has)
+	{
+		printf("something is wrong\n");
+	}
+	else
+	{
+		for (i = 0; i < NENV; i++)
+		{
+			findfa(i);
+			findfa(now);
+			if(fa[now] == fa[i])
+			{
+				e = envs + i;
+				e->env_status = ENV_NOT_RUNNABLE;
+			}
+		}
+	}
+}
 
 /* Overview:
  *  This function is for making an unique ID for every env.
