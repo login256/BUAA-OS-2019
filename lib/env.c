@@ -128,7 +128,8 @@ env_setup_vm(struct Env *e)
 	/*Step 1: Allocate a page for the page directory using a function you completed in the lab2.
        * and add its reference.
        *pgdir is the page directory of Env e, assign value for it. */
-    if (page_alloc(&p) != 0) {/* Todo here*/
+	r = page_alloc(&p);
+    if (r != 0) {/* Todo here*/
         panic("env_setup_vm - page alloc error\n");
         return r;
     }
@@ -246,12 +247,15 @@ static int load_icode_mapper(u_long va, u_int32_t sgsize,
 {
 	struct Env *env = (struct Env *)user_data;
 	struct Page *p = NULL;
-	u_long i;
+	u_long i = 0;
 	int r;
 	u_long offset = va - ROUNDDOWN(va, BY2PG);
-
+	if (offset)
+	{
+		p = page_lookup(env->env_pgdir, va, NULL);
+	}
 	/*Step 1: load all content of bin into memory. */
-	for (i = 0; i < bin_size; i += BY2PG) {
+	for (; i < bin_size; i += BY2PG) {
 		/* Hint: You should alloc a page and increase the reference count of it. */
 	}
 	/*Step 2: alloc pages to reach `sgsize` when `bin_size` < `sgsize`.
