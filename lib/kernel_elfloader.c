@@ -73,10 +73,11 @@ int load_elf(u_char *binary, int size, u_long *entry_point, void *user_data,
 	 /* Your task here!  */
         /* Real map all section at correct virtual address.Return < 0 if error. */
         /* Hint: Call the callback function you have achieved before. */
-	
-
-
-
+					r = map(phdr->p_vaddr, phdr->p_filesz, phdr->p_offset, phdr->p_memsz, user_data);
+					if (r != 0)
+					{
+						return r;
+					}
                 }
 
                 ptr_ph_table += ph_entry_size;

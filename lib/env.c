@@ -250,18 +250,67 @@ static int load_icode_mapper(u_long va, u_int32_t sgsize,
 	u_long i = 0;
 	int r;
 	u_long offset = va - ROUNDDOWN(va, BY2PG);
+	int size;
 	if (offset)
 	{
-		p = page_lookup(env->env_pgdir, va, NULL);
+		p = page_lookup(env->env_pgdir, va + i, NULL);
+		if(p == 0)
+		{
+			r = page_alloc(&p);
+			if (r != 0)
+			{
+				return r;
+			}
+			page_insert(env->env_pgdir, p, va + i, PTE_R);
+		}
+		size = MIN(bin_size - i, BY2PG - offset);
+		bcopy((void*)bin, (void*)(page2kva(p) + offset), size);
+		i = i + size;
 	}
 	/*Step 1: load all content of bin into memory. */
-	for (; i < bin_size; i += BY2PG) {
+	//for (; i < bin_size; i += BY2PG) 
+	while (i < bin_size)
+	{
 		/* Hint: You should alloc a page and increase the reference count of it. */
+		size = MIN(BY2PG, bin_size - i);
+		r = page_alloc(&p);
+		if (r != 0)
+		{
+			return r;
+		}
+		page_insert(env->env_pgdir, p ,va + i, PTE_R);
+		bcopy((void*)bin + i, (void*)(page2kva(p)), size);
+		i += size;
 	}
 	/*Step 2: alloc pages to reach `sgsize` when `bin_size` < `sgsize`.
     * i has the value of `bin_size` now. */
+	offset = i - ROUNDDOWN(i, BY2PG);
+	if (offset)
+	{
+		p = page_lookup(env->env_pgdir, va + i, NULL);
+		if(p == 0)
+		{
+			r = page_alloc(&p);
+			if (r != 0)
+			{
+				return r;
+			}
+			page_insert(env->env_pgdir, p, va + i, PTE_R);
+		}
+		size = MIN(sgsize - i, BY2PG - offset);
+		bcopy((void*)bin, (void*)(page2kva(p) + offset), size);
+		i = i + size;
+	}
 	while (i < sgsize) {
-
+		size = MIN(BY2PG, sgsize - i);
+		r = page_alloc(&p);
+		if (r != 0)
+		{
+			return r;
+		}
+		page_insert(env->env_pgdir, p, va + i, PTE_R);
+		bzero((void*)page2kva(p), size);
+		i += size;
 
 	}
 	return 0;
@@ -290,17 +339,25 @@ load_icode(struct Env *e, u_char *binary, u_int size)
 	struct Page *p = NULL;
 	u_long entry_point;
 	u_long r;
-    u_long perm;
+    u_long perm = PTE_R;
     
     /*Step 1: alloc a page. */
-
+	r = page_alloc(&p);
+	if(r!=0)
+	{
+		return;
+	}
 
     /*Step 2: Use appropriate perm to set initial stack for new Env. */
     /*Hint: The user-stack should be writable? */
-
+	r = page_insert(e->env_pgdir, p, USTACKTOP - BY2PG, perm);
+	if(r!=0)
+	{
+		return;
+	}
 
     /*Step 3:load the binary by using elf loader. */
-
+	load_elf(binary, size, &entry_point, (void*)e, load_icode_mapper);
 
     /***Your Question Here***/
     /*Step 4:Set CPU's PC register as appropriate value. */
@@ -320,12 +377,17 @@ void
 env_create_priority(u_char *binary, int size, int priority)
 {
         struct Env *e;
+		int r;
     /*Step 1: Use env_alloc to alloc a new env. */
-
+		r = env_alloc(&e,0);
+		if(r != 0)
+		{
+			return;
+		}
     /*Step 2: assign priority to the new env. */
-
+		e->env_pri = priority;
     /*Step 3: Use load_icode() to load the named elf binary. */
-
+		load_icode(e, binary, size);
 }
 /* Overview:
  * Allocates a new env with default priority value.
@@ -338,7 +400,7 @@ void
 env_create(u_char *binary, int size)
 {
 	 /*Step 1: Use env_create_priority to alloc a new env with priority 1 */
-
+	env_create_priority(binary, size, 1);
 }
 
 /* Overview:
@@ -424,20 +486,25 @@ env_run(struct Env *e)
 	/*Step 1: save register state of curenv. */
     /* Hint: if there is a environment running,you should do
     *  context switch.You can imitate env_destroy() 's behaviors.*/
-
+	if(curenv)
+	{
+		struct Trapframe *old;
+		old = (struct Trapframp *)(TIMESTACK - sizeof(struct Trapframe));
+		bcopy(old, &(curenv->env_tf), sizeof(struct Trapframe));
+	}
 
     /*Step 2: Set 'curenv' to the new environment. */
-
+	curenv = e;
 
     /*Step 3: Use lcontext() to switch to its address space. */
-
+	lcontext(e->env_pgdir);
 
     /*Step 4: Use env_pop_tf() to restore the environment's
      * environment   registers and drop into user mode in the
      * the   environment.
      */
     /* Hint: You should use GET_ENV_ASID there.Think why? */
-
+	env_pop_tf(&(e->env_tf), GET_ENV_ASID(e->env_id));
 }
 void env_check()
 {
