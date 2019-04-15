@@ -19,6 +19,73 @@ extern Pde *boot_pgdir;
 extern char *KERNEL_SP;
 
 
+u_int newmkenvid(struct Env *e, int pri)
+{
+	u_int idx = e -envs;
+	return (pri << (1 + LOG2NENV)) | idx;
+}
+
+void output_env_info(int envid)
+{
+	static int cnt_times = 0;
+	cnt_times++;
+	int pri = envid >> (1 + LOG2NENV);
+	printf("no=%d,env_index=%d,env_pri=%d\n", cnt_times, ENVX(envid), pri);
+}
+
+void init_envid()
+{
+	int i;
+	struct Env *e;
+	for (i = 0; i < NENV; i++)
+	{
+		e = &envs[i];
+		if (e->env_status == ENV_RUNNABLE)
+		{
+			e->env_id = newmkenvid(e, e->env_pri);
+		}
+	}
+}
+
+int newenvid2env(u_int envid, struct Env **penv, int checkperm)
+{
+        struct Env *e;
+    /* Hint:
+ *      *  If envid is zero, return the current environment.*/
+		if (envid == 0)
+		{
+			*penv = curenv;
+			return 0;
+		}
+    /*Step 1: Assign value to e using envid. */
+		e = envs + ENVX(envid);
+
+        if (e->env_status == ENV_FREE || e->env_id != envid) {
+                *penv = NULL;
+                return -E_BAD_ENV;
+        }
+    /* Hint:
+ *      *  Check that the calling environment has legitimate permissions
+ *           *  to manipulate the specified environment.
+ *                *  If checkperm is set, the specified environment
+ *                     *  must be either the current environment.
+ *                          *  or an immediate child of the current environment.If not, error! */
+    /*Step 2: Make a check according to checkperm. */
+		if(checkperm)
+		{
+			if (e != curenv && e->env_parent_id != curenv->env_id)
+			{
+				*penv = 0;
+				return -E_BAD_ENV;
+			}
+		}
+
+        *penv = e;
+        return 0;
+}
+
+
+
 /* Overview:
  *  This function is for making an unique ID for every env.
  *
@@ -56,6 +123,11 @@ int envid2env(u_int envid, struct Env **penv, int checkperm)
         struct Env *e;
     /* Hint:
  *      *  If envid is zero, return the current environment.*/
+		if (envid == 0)
+		{
+			*penv = curenv;
+			return 0;
+		}
     /*Step 1: Assign value to e using envid. */
 		e = envs + ENVX(envid);
 
