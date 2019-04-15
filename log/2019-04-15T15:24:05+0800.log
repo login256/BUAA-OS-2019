@@ -1,0 +1,374 @@
+Autotest: Begin at Mon Apr 15 15:24:05 CST 2019
+Begin build at Mon Apr 15 15:24:23 CST 2019
+Cleanning the project.................
+
+for d in boot drivers init lib mm;	\
+	do					\
+		make --directory=$d clean; \
+	done; \
+rm -rf *.o *~ gxemul/vmlinux
+make[1]: Entering directory '/usr/src/workdir/boot'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/boot'
+make[1]: Entering directory '/usr/src/workdir/drivers'
+for d in gxconsole; \
+	do				\
+		make --directory=$d clean; \
+	done
+make[2]: Entering directory '/usr/src/workdir/drivers/gxconsole'
+rm -rf *.o *~
+make[2]: Leaving directory '/usr/src/workdir/drivers/gxconsole'
+make[1]: Leaving directory '/usr/src/workdir/drivers'
+make[1]: Entering directory '/usr/src/workdir/init'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/init'
+make[1]: Entering directory '/usr/src/workdir/lib'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/lib'
+make[1]: Entering directory '/usr/src/workdir/mm'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/mm'
+
+Building the project..................
+
+make --directory=boot
+make[1]: Entering directory '/usr/src/workdir/boot'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c start.S 
+make[1]: Leaving directory '/usr/src/workdir/boot'
+make --directory=drivers
+make[1]: Entering directory '/usr/src/workdir/drivers'
+make --directory=gxconsole
+make[2]: Entering directory '/usr/src/workdir/drivers/gxconsole'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC   -c -o console.o console.c
+make[2]: Leaving directory '/usr/src/workdir/drivers/gxconsole'
+make[1]: Leaving directory '/usr/src/workdir/drivers'
+make --directory=init
+make[1]: Entering directory '/usr/src/workdir/init'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c init.c
+In file included from init.c:3:
+../include/env.h:53: warning: type defaults to 'int' in declaration of 'innenv_alloc'
+../include/env.h:53: warning: data definition has no type or storage class
+init.c: In function 'mips_init':
+init.c:31: warning: implicit declaration of function 'env_alloc'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c main.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c code_a.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c code_b.c
+make[1]: Leaving directory '/usr/src/workdir/init'
+make --directory=lib
+make[1]: Entering directory '/usr/src/workdir/lib'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c kernel_elfloader.c
+kernel_elfloader.c: In function 'load_elf':
+kernel_elfloader.c:76: warning: passing argument 3 of 'map' makes pointer from integer without a cast
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c env.c
+In file included from env.c:6:
+../include/env.h:53: warning: type defaults to 'int' in declaration of 'innenv_alloc'
+../include/env.h:53: warning: data definition has no type or storage class
+env.c: In function 'kill_all':
+env.c:59: warning: unused variable 'r'
+env.c: In function 'env_alloc':
+env.c:290: warning: unused variable 'r'
+env.c: In function 'env_run':
+env.c:586: warning: assignment from incompatible pointer type
+env.c:594: warning: passing argument 1 of 'lcontext' makes integer from pointer without a cast
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c print.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c printf.c
+In file included from sched.c:1:
+../include/env.h:53: warning: type defaults to 'int' in declaration of 'innenv_alloc'
+../include/env.h:53: warning: data definition has no type or storage class
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c sched.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c env_asm.S
+env_asm.S: Assembler messages:
+env_asm.S:62: Warning: Used $at without ".set noat"
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c kclock.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c traps.c
+In file included from traps.c:2:
+../include/env.h:53: warning: type defaults to 'int' in declaration of 'innenv_alloc'
+../include/env.h:53: warning: data definition has no type or storage class
+traps.c: In function 'page_fault_handler':
+traps.c:58: warning: passing argument 2 of 'bcopy' makes pointer from integer without a cast
+traps.c:66: warning: passing argument 2 of 'bcopy' makes pointer from integer without a cast
+traps.c:47: warning: unused variable 'd'
+traps.c:47: warning: unused variable 'tos'
+traps.c:46: warning: unused variable 'va'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c genex.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c kclock_asm.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c syscall.S
+syscall.S: Assembler messages:
+syscall.S:10: Warning: Used $at without ".set noat"
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c syscall_all.c
+In file included from syscall_all.c:3:
+../include/env.h:53: warning: type defaults to 'int' in declaration of 'innenv_alloc'
+../include/env.h:53: warning: data definition has no type or storage class
+syscall_all.c: In function 'sys_putchar':
+syscall_all.c:14: warning: implicit declaration of function 'printcharc'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c getc.S
+make[1]: Leaving directory '/usr/src/workdir/lib'
+make --directory=mm
+make[1]: Entering directory '/usr/src/workdir/mm'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c pmap.c
+In file included from pmap.c:4:
+../include/env.h:53: warning: type defaults to 'int' in declaration of 'innenv_alloc'
+../include/env.h:53: warning: data definition has no type or storage class
+pmap.c: In function 'boot_map_segment':
+pmap.c:132: warning: unused variable 'va_temp'
+pmap.c: In function 'page_init':
+pmap.c:203: warning: statement with no effect
+pmap.c:198: warning: unused variable 'last'
+pmap.c: In function 'page_alloc':
+pmap.c:261: warning: passing argument 1 of 'bzero' makes pointer from integer without a cast
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c tlb_asm.S
+make[1]: Leaving directory '/usr/src/workdir/mm'
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o gxemul/vmlinux -N -T tools/scse0_3.lds boot/start.o init/*.o drivers/gxconsole/console.o lib/*.o mm/*.o
+
+End build at Mon Apr 15 15:28:01 CST 2019
+[35m[ PASSED:16 ][0m
+[35m[ TOTAL:16 ][0m
+Begin build at Mon Apr 15 15:28:13 CST 2019
+Cleanning the project.................
+
+for d in boot drivers init lib mm;	\
+	do					\
+		make --directory=$d clean; \
+	done; \
+rm -rf *.o *~ gxemul/vmlinux
+make[1]: Entering directory '/usr/src/workdir/boot'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/boot'
+make[1]: Entering directory '/usr/src/workdir/drivers'
+for d in gxconsole; \
+	do				\
+		make --directory=$d clean; \
+	done
+make[2]: Entering directory '/usr/src/workdir/drivers/gxconsole'
+rm -rf *.o *~
+make[2]: Leaving directory '/usr/src/workdir/drivers/gxconsole'
+make[1]: Leaving directory '/usr/src/workdir/drivers'
+make[1]: Entering directory '/usr/src/workdir/init'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/init'
+make[1]: Entering directory '/usr/src/workdir/lib'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/lib'
+make[1]: Entering directory '/usr/src/workdir/mm'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/mm'
+
+Building the project..................
+
+make --directory=boot
+make[1]: Entering directory '/usr/src/workdir/boot'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c start.S 
+make[1]: Leaving directory '/usr/src/workdir/boot'
+make --directory=drivers
+make[1]: Entering directory '/usr/src/workdir/drivers'
+make --directory=gxconsole
+make[2]: Entering directory '/usr/src/workdir/drivers/gxconsole'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC   -c -o console.o console.c
+make[2]: Leaving directory '/usr/src/workdir/drivers/gxconsole'
+make[1]: Leaving directory '/usr/src/workdir/drivers'
+make --directory=init
+make[1]: Entering directory '/usr/src/workdir/init'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c init.c
+In file included from init.c:3:
+../include/env.h:53: warning: type defaults to 'int' in declaration of 'innenv_alloc'
+../include/env.h:53: warning: data definition has no type or storage class
+init.c: In function 'mips_init':
+init.c:33: warning: implicit declaration of function 'env_alloc'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c main.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c code_a.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c code_b.c
+make[1]: Leaving directory '/usr/src/workdir/init'
+make --directory=lib
+make[1]: Entering directory '/usr/src/workdir/lib'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c kernel_elfloader.c
+kernel_elfloader.c: In function 'load_elf':
+kernel_elfloader.c:76: warning: passing argument 3 of 'map' makes pointer from integer without a cast
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c env.c
+In file included from env.c:6:
+../include/env.h:53: warning: type defaults to 'int' in declaration of 'innenv_alloc'
+../include/env.h:53: warning: data definition has no type or storage class
+env.c: In function 'kill_all':
+env.c:59: warning: unused variable 'r'
+env.c: In function 'env_alloc':
+env.c:290: warning: unused variable 'r'
+env.c: In function 'env_run':
+env.c:586: warning: assignment from incompatible pointer type
+env.c:594: warning: passing argument 1 of 'lcontext' makes integer from pointer without a cast
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c print.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c printf.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c sched.c
+In file included from sched.c:1:
+../include/env.h:53: warning: type defaults to 'int' in declaration of 'innenv_alloc'
+../include/env.h:53: warning: data definition has no type or storage class
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c env_asm.S
+env_asm.S: Assembler messages:
+env_asm.S:62: Warning: Used $at without ".set noat"
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c kclock.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c traps.c
+In file included from traps.c:2:
+../include/env.h:53: warning: type defaults to 'int' in declaration of 'innenv_alloc'
+../include/env.h:53: warning: data definition has no type or storage class
+traps.c: In function 'page_fault_handler':
+traps.c:58: warning: passing argument 2 of 'bcopy' makes pointer from integer without a cast
+traps.c:66: warning: passing argument 2 of 'bcopy' makes pointer from integer without a cast
+traps.c:47: warning: unused variable 'd'
+traps.c:47: warning: unused variable 'tos'
+traps.c:46: warning: unused variable 'va'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c genex.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c kclock_asm.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c syscall.S
+syscall.S: Assembler messages:
+syscall.S:10: Warning: Used $at without ".set noat"
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c syscall_all.c
+In file included from syscall_all.c:3:
+../include/env.h:53: warning: type defaults to 'int' in declaration of 'innenv_alloc'
+../include/env.h:53: warning: data definition has no type or storage class
+syscall_all.c: In function 'sys_putchar':
+syscall_all.c:14: warning: implicit declaration of function 'printcharc'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c getc.S
+make[1]: Leaving directory '/usr/src/workdir/lib'
+make --directory=mm
+make[1]: Entering directory '/usr/src/workdir/mm'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c pmap.c
+In file included from pmap.c:4:
+../include/env.h:53: warning: type defaults to 'int' in declaration of 'innenv_alloc'
+../include/env.h:53: warning: data definition has no type or storage class
+pmap.c: In function 'boot_map_segment':
+pmap.c:132: warning: unused variable 'va_temp'
+pmap.c: In function 'page_init':
+pmap.c:203: warning: statement with no effect
+pmap.c:198: warning: unused variable 'last'
+pmap.c: In function 'page_alloc':
+pmap.c:261: warning: passing argument 1 of 'bzero' makes pointer from integer without a cast
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c tlb_asm.S
+make[1]: Leaving directory '/usr/src/workdir/mm'
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o gxemul/vmlinux -N -T tools/scse0_3.lds boot/start.o init/*.o drivers/gxconsole/console.o lib/*.o mm/*.o
+
+End build at Mon Apr 15 15:32:13 CST 2019
+[35m[ PASSED:20 ][0m
+[35m[ TOTAL:20 ][0m
+Begin build at Mon Apr 15 15:32:23 CST 2019
+Cleanning the project.................
+
+for d in boot drivers init lib mm;	\
+	do					\
+		make --directory=$d clean; \
+	done; \
+rm -rf *.o *~ gxemul/vmlinux
+make[1]: Entering directory '/usr/src/workdir/boot'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/boot'
+make[1]: Entering directory '/usr/src/workdir/drivers'
+for d in gxconsole; \
+	do				\
+		make --directory=$d clean; \
+	done
+make[2]: Entering directory '/usr/src/workdir/drivers/gxconsole'
+rm -rf *.o *~
+make[2]: Leaving directory '/usr/src/workdir/drivers/gxconsole'
+make[1]: Leaving directory '/usr/src/workdir/drivers'
+make[1]: Entering directory '/usr/src/workdir/init'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/init'
+make[1]: Entering directory '/usr/src/workdir/lib'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/lib'
+make[1]: Entering directory '/usr/src/workdir/mm'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/mm'
+
+Building the project..................
+
+make --directory=boot
+make[1]: Entering directory '/usr/src/workdir/boot'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c start.S 
+make[1]: Leaving directory '/usr/src/workdir/boot'
+make --directory=drivers
+make[1]: Entering directory '/usr/src/workdir/drivers'
+make --directory=gxconsole
+make[2]: Entering directory '/usr/src/workdir/drivers/gxconsole'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC   -c -o console.o console.c
+make[2]: Leaving directory '/usr/src/workdir/drivers/gxconsole'
+make[1]: Leaving directory '/usr/src/workdir/drivers'
+make --directory=init
+make[1]: Entering directory '/usr/src/workdir/init'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c init.c
+In file included from init.c:3:
+../include/env.h:53: warning: type defaults to 'int' in declaration of 'innenv_alloc'
+../include/env.h:53: warning: data definition has no type or storage class
+init.c: In function 'mips_init':
+init.c:36: warning: implicit declaration of function 'env_alloc'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c main.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c code_a.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c code_b.c
+make[1]: Leaving directory '/usr/src/workdir/init'
+make --directory=lib
+make[1]: Entering directory '/usr/src/workdir/lib'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c kernel_elfloader.c
+kernel_elfloader.c: In function 'load_elf':
+kernel_elfloader.c:76: warning: passing argument 3 of 'map' makes pointer from integer without a cast
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c env.c
+In file included from env.c:6:
+../include/env.h:53: warning: type defaults to 'int' in declaration of 'innenv_alloc'
+../include/env.h:53: warning: data definition has no type or storage class
+env.c: In function 'kill_all':
+env.c:59: warning: unused variable 'r'
+env.c: In function 'env_alloc':
+env.c:290: warning: unused variable 'r'
+env.c: In function 'env_run':
+env.c:586: warning: assignment from incompatible pointer type
+env.c:594: warning: passing argument 1 of 'lcontext' makes integer from pointer without a cast
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c print.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c printf.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c sched.c
+In file included from sched.c:1:
+../include/env.h:53: warning: type defaults to 'int' in declaration of 'innenv_alloc'
+../include/env.h:53: warning: data definition has no type or storage class
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c env_asm.S
+env_asm.S: Assembler messages:
+env_asm.S:62: Warning: Used $at without ".set noat"
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c kclock.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c traps.c
+In file included from traps.c:2:
+../include/env.h:53: warning: type defaults to 'int' in declaration of 'innenv_alloc'
+../include/env.h:53: warning: data definition has no type or storage class
+traps.c: In function 'page_fault_handler':
+traps.c:58: warning: passing argument 2 of 'bcopy' makes pointer from integer without a cast
+traps.c:66: warning: passing argument 2 of 'bcopy' makes pointer from integer without a cast
+traps.c:47: warning: unused variable 'd'
+traps.c:47: warning: unused variable 'tos'
+traps.c:46: warning: unused variable 'va'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c genex.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c kclock_asm.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c syscall.S
+syscall.S: Assembler messages:
+syscall.S:10: Warning: Used $at without ".set noat"
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c syscall_all.c
+In file included from syscall_all.c:3:
+../include/env.h:53: warning: type defaults to 'int' in declaration of 'innenv_alloc'
+../include/env.h:53: warning: data definition has no type or storage class
+syscall_all.c: In function 'sys_putchar':
+syscall_all.c:14: warning: implicit declaration of function 'printcharc'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c getc.S
+make[1]: Leaving directory '/usr/src/workdir/lib'
+make --directory=mm
+make[1]: Entering directory '/usr/src/workdir/mm'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c pmap.c
+In file included from pmap.c:4:
+../include/env.h:53: warning: type defaults to 'int' in declaration of 'innenv_alloc'
+../include/env.h:53: warning: data definition has no type or storage class
+pmap.c: In function 'boot_map_segment':
+pmap.c:132: warning: unused variable 'va_temp'
+pmap.c: In function 'page_init':
+pmap.c:203: warning: statement with no effect
+pmap.c:198: warning: unused variable 'last'
+pmap.c: In function 'page_alloc':
+pmap.c:261: warning: passing argument 1 of 'bzero' makes pointer from integer without a cast
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c tlb_asm.S
+make[1]: Leaving directory '/usr/src/workdir/mm'
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o gxemul/vmlinux -N -T tools/scse0_3.lds boot/start.o init/*.o drivers/gxconsole/console.o lib/*.o mm/*.o
+
+End build at Mon Apr 15 15:36:18 CST 2019
+[35m[ PASSED:11 ][0m
+[35m[ TOTAL:11 ][0m
+[33m[01m[ You got 100 (of 100) this time. Mon Apr 15 15:36:31 CST 2019 ][0m
