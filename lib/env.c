@@ -96,7 +96,7 @@ void kill_all(u_int envid)
 	}
 	if (has)
 	{
-		printf("something is wrong\n");
+		printf("something is wrong!\n");
 	}
 	else
 	{
