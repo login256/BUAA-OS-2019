@@ -72,7 +72,10 @@ void kill_all(u_int envid)
 				par = ENVX(e->env_parent_id);
 				findfa(par);
 				findfa(i);
-				fa[fa[i]] = fa[par];
+				if(fa[i] != fa[par])
+				{
+					fa[fa[i]] = fa[par];
+				}
 			}
 		}
 	}
