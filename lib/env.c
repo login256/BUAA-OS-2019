@@ -99,6 +99,9 @@ env_init(void)
     /*Step 1: Initial env_free_list. */
 	LIST_INIT(&env_free_list);
 
+	LIST_INIT(&env_sched_list[0]);
+	LIST_INIT(&env_sched_list[1]);
+
     /*Step 2: Travel the elements in 'envs', init every element(mainly initial its status, mark it as free)
      * and inserts them into the env_free_list as reverse order. */
 	for (i = NENV-1; i >=0; i--)
@@ -251,6 +254,7 @@ static int load_icode_mapper(u_long va, u_int32_t sgsize,
 	int r;
 	u_long offset = va - ROUNDDOWN(va, BY2PG);
 	int size;
+	// printf("Enter load mapper\n");
 	if (offset)
 	{
 		p = page_lookup(env->env_pgdir, va + i, NULL);
@@ -269,6 +273,7 @@ static int load_icode_mapper(u_long va, u_int32_t sgsize,
 	}
 	/*Step 1: load all content of bin into memory. */
 	//for (; i < bin_size; i += BY2PG) 
+	// printf("Offset 1 OK!\n");
 	while (i < bin_size)
 	{
 		/* Hint: You should alloc a page and increase the reference count of it. */
@@ -282,6 +287,7 @@ static int load_icode_mapper(u_long va, u_int32_t sgsize,
 		bcopy((void*)bin + i, (void*)(page2kva(p)), size);
 		i += size;
 	}
+	// printf("binsize OK!\n");
 	/*Step 2: alloc pages to reach `sgsize` when `bin_size` < `sgsize`.
     * i has the value of `bin_size` now. */
 	offset = i - ROUNDDOWN(i, BY2PG);
@@ -355,7 +361,7 @@ load_icode(struct Env *e, u_char *binary, u_int size)
 	{
 		return;
 	}
-
+	//printf("Insert pgdir's page OK!\n");
     /*Step 3:load the binary by using elf loader. */
 	load_elf(binary, size, &entry_point, (void*)e, load_icode_mapper);
 
@@ -380,6 +386,7 @@ env_create_priority(u_char *binary, int size, int priority)
 		int r;
     /*Step 1: Use env_alloc to alloc a new env. */
 		r = env_alloc(&e,0);
+		// printf("alloc OK!\n");
 		if(r != 0)
 		{
 			return;
@@ -388,6 +395,9 @@ env_create_priority(u_char *binary, int size, int priority)
 		e->env_pri = priority;
     /*Step 3: Use load_icode() to load the named elf binary. */
 		load_icode(e, binary, size);
+		//printf("load OK!\n");
+	/*Step 4: (By myself) add this envPCB to env_sched_list[0]*/
+		LIST_INSERT_TAIL(&env_sched_list[0], e, env_sched_link);
 }
 /* Overview:
  * Allocates a new env with default priority value.
@@ -491,6 +501,7 @@ env_run(struct Env *e)
 		struct Trapframe *old;
 		old = (struct Trapframp *)(TIMESTACK - sizeof(struct Trapframe));
 		bcopy(old, &(curenv->env_tf), sizeof(struct Trapframe));
+		curenv->env_tf.pc = curenv->env_tf.cp0_epc;
 	}
 
     /*Step 2: Set 'curenv' to the new environment. */
@@ -498,7 +509,6 @@ env_run(struct Env *e)
 
     /*Step 3: Use lcontext() to switch to its address space. */
 	lcontext(e->env_pgdir);
-
     /*Step 4: Use env_pop_tf() to restore the environment's
      * environment   registers and drop into user mode in the
      * the   environment.
