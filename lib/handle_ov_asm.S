@@ -25,7 +25,6 @@ LEAF(handle_ov)
 	li t7, 0
 	jal ov_check
 	nop
-	STI
 	j ret_from_exception
 	nop
 END(handle_ov)
