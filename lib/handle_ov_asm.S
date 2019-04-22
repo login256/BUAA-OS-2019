@@ -14,8 +14,17 @@ NESTED(handle_ov, TF_SIZE, sp)
 	move a0, sp
 	jal ov_do
 	nop
+	li t0, 0
+	li t1, 0
+	li t2, 0
+	li t3, 0
+	li t4, 0
+	li t5, 0
+	li t6, 0
+	li t7, 0
 	jal ov_check
 	nop
+	STI
 	j ret_from_exception
 	nop
 END(handle_ov)
