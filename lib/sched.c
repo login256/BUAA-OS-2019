@@ -62,7 +62,7 @@ void sched_yield(void)
 		}
 		if (LIST_EMPTY(&env_sched_list[cur_head_index]))
 		{
-			panic("^^^^^^No env is RUNNABLE!^^^^^^");
+			//panic("^^^^^^No env is RUNNABLE!^^^^^^");
 		}
 		next_env = LIST_FIRST(&env_sched_list[cur_head_index]);
 		LIST_REMOVE(next_env, env_sched_link);
