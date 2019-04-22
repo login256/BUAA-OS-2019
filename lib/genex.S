@@ -67,7 +67,7 @@ END(handle_int)
 
 timer_irq:
 
-1:	j	sched_yield
+1:	j	sched_yield_new
 	nop
 	/*li t1, 0xff
 	lw    t0, delay

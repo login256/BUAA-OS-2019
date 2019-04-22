@@ -22,6 +22,7 @@ void mips_init()
 	 * interesting, have fun please*/
 	ENV_CREATE_PRIORITY(user_A, 2);
 	ENV_CREATE_PRIORITY(user_B, 1);
+	ENV_CREATE_PRIORITY(user_C, 4);
 
 	
 	trap_init();

@@ -472,7 +472,7 @@ env_destroy(struct Env *e)
 			  (void *)TIMESTACK - sizeof(struct Trapframe),
 			  sizeof(struct Trapframe));
 		printf("i am killed ... \n");
-		sched_yield();
+		sched_yield_new();
 	}
 }
 
