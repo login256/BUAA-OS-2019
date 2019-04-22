@@ -17,4 +17,5 @@ NESTED(handle_ov, TF_SIZE, sp)
 	jal ov_check
 	nop
 	j ret_from_exception
+	nop
 END(handle_ov)
