@@ -6,7 +6,7 @@
 
 .extern ov_do
 
-NESTED(handle_ov, TF_SIZE, sp)
+LEAF(handle_ov)
 	.set noat
 	nop
 	SAVE_ALL
