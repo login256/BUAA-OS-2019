@@ -14,6 +14,7 @@ LEAF(handle_ov)
 	move a0, sp
 	jal ov_do
 	nop
+	RESTORE_SOME
 	li t0, 0
 	li t1, 0
 	li t2, 0

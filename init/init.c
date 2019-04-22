@@ -29,7 +29,7 @@ void mips_init()
 	trap_init();
 	kclock_init();
 	//printf("begin\n");
-	add_ov();
+	//add_ov();
 	panic("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 	while(1);
 	panic("init.c:\tend of mips_init() reached!");
