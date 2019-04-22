@@ -5,6 +5,8 @@
 #include <kclock.h>
 #include <trap.h>
 
+extern void add_ov(void);
+
 void mips_init()
 {
 	printf("init.c:\tmips_init() is called\n");
@@ -22,10 +24,12 @@ void mips_init()
 	 * interesting, have fun please*/
 	ENV_CREATE_PRIORITY(user_A, 2);
 	ENV_CREATE_PRIORITY(user_B, 1);
-
+	
 	
 	trap_init();
 	kclock_init();
+	//printf("begin\n");
+	add_ov();
 	panic("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 	while(1);
 	panic("init.c:\tend of mips_init() reached!");

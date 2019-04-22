@@ -11,6 +11,7 @@ NESTED(handle_ov, TF_SIZE, sp)
 	nop
 	SAVE_ALL
 	CLI
+	move a0, sp
 	jal ov_do
 	nop
 	jal ov_check
