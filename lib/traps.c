@@ -12,12 +12,13 @@ unsigned long exception_handlers[32];
 void trap_init(){
 	int i;
 	for(i=0;i<32;i++)
-	set_except_vector(i, handle_ov);//reserved);
+	set_except_vector(i, handle_reserved);
 	set_except_vector(0, handle_int);
 	set_except_vector(1, handle_mod);
 	set_except_vector(2, handle_tlb);
 	set_except_vector(3, handle_tlb);
 	set_except_vector(8, handle_sys);
+	set_except_vector(12, handle_ov);
 }
 void *set_except_vector(int n, void * addr){
 	unsigned long handler=(unsigned long)addr;

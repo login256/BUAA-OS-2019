@@ -1,4 +1,5 @@
 #include<printf.h>
+#include<trap.h>
 
 extern char *KERNEL_SP;
 
@@ -8,7 +9,7 @@ void ov_do(void)
 	int i;
 	tf = (struct Trapframp *)(KERNEL_SP - sizeof(struct Trapframe));
 	u_int *instr_p = tf->cp0_epc;
-	u_int instr = *instr_p
+	u_int instr = *instr_p;
 	printf("Instr: 0x%x\n",instr_p);
 	printf("reg %d and reg %d\n", instr|(0x1f << 21), instr|(0x1f << 16));
 	for (i = 8; i <= 15; i++)

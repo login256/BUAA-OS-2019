@@ -4,6 +4,8 @@
 #include <stackframe.h>
 #include <trap.h>
 
+.extern ov_do
+
 NESTED(handle_ov, TF_SIZE, sp)
 	.set noat
 	nop
@@ -13,5 +15,5 @@ NESTED(handle_ov, TF_SIZE, sp)
 	nop
 	jal ov_check
 	nop
-	ret_from_exception
+	j ret_from_exception
 END(handle_ov)
