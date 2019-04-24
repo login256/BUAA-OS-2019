@@ -58,10 +58,10 @@
  o                      |       Kernel Stack         |    | KSTKSIZE            /|\
  o                      +----------------------------+----|------                |
  o                      |       Kernel Text          |    |                    PDMAP
- o      KERNBASE -----> +----------------------------+----|-------0x8001 0000    | 
+ o      KERNBASE -----> +----------------------------+----|-------0x8001 0000    |
  o                      |   Interrupts & Exception   |   \|/                    \|/
- o      ULIM     -----> +----------------------------+------------0x8000 0000-------    
- o                      |         User VPT           |     PDMAP                /|\ 
+ o      ULIM     -----> +----------------------------+------------0x8000 0000-------
+ o                      |         User VPT           |     PDMAP                /|\
  o      UVPT     -----> +----------------------------+------------0x7fc0 0000    |
  o                      |         PAGES              |     PDMAP                 |
  o      UPAGES   -----> +----------------------------+------------0x7f80 0000    |
@@ -107,11 +107,11 @@
 
 #define E_UNSPECIFIED	1	// Unspecified or unknown problem
 #define E_BAD_ENV       2       // Environment doesn't exist or otherwise
-				// cannot be used in requested action
+// cannot be used in requested action
 #define E_INVAL		3	// Invalid parameter
 #define E_NO_MEM	4	// Request failed due to memory shortage
 #define E_NO_FREE_ENV   5       // Attempt to create a new environment beyond
-				// the maximum allowed
+// the maximum allowed
 #define E_IPC_NOT_RECV  6	// Attempt to send to env that is not recving.
 
 // File system error codes -- only seen in user-level
@@ -140,38 +140,38 @@ extern u_long npage;
 typedef u_long Pde;
 typedef u_long Pte;
 
-extern volatile Pte* vpt[];
-extern volatile Pde* vpd[];
+extern volatile Pte *vpt[];
+extern volatile Pde *vpd[];
 
+// translates from kernel virtual address to physical address.
 #define PADDR(kva)						\
-({								\
-	u_long a = (u_long) (kva);				\
-	if (a < ULIM)					\
-		panic("PADDR called with invalid kva %08lx", a);\
-	a - ULIM;						\
-})
+	({								\
+		u_long a = (u_long) (kva);				\
+		if (a < ULIM)					\
+			panic("PADDR called with invalid kva %08lx", a);\
+		a - ULIM;						\
+	})
 
-
-// translates from physical address to kernel virtual address
+// translates from physical address to kernel virtual address.
 #define KADDR(pa)						\
-({								\
-	u_long ppn = PPN(pa);					\
-	if (ppn >= npage)					\
-		panic("KADDR called with invalid pa %08lx", (u_long)pa);\
-	(pa) + ULIM;					\
-})
+	({								\
+		u_long ppn = PPN(pa);					\
+		if (ppn >= npage)					\
+			panic("KADDR called with invalid pa %08lx", (u_long)pa);\
+		(pa) + ULIM;					\
+	})
 
 #define assert(x)	\
 	do {	if (!(x)) panic("assertion failed: %s", #x); } while (0)
 
 #define TRUP(_p)   						\
-({								\
-	register typeof((_p)) __m_p = (_p);			\
-	(u_int) __m_p > ULIM ? (typeof(_p)) ULIM : __m_p;	\
-})
-
+	({								\
+		register typeof((_p)) __m_p = (_p);			\
+		(u_int) __m_p > ULIM ? (typeof(_p)) ULIM : __m_p;	\
+	})
 
 
 extern void tlb_out(u_int entryhi);
+
 #endif //!__ASSEMBLER__
 #endif // !_MMU_H_

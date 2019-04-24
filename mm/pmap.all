@@ -1,0 +1,232 @@
+# 1 "pmap.c"
+# 1 "<built-in>"
+# 1 "<command line>"
+# 1 "pmap.c"
+# 1 "mmu.h" 1
+
+
+
+# 1 "types.h" 1
+# 12 "types.h"
+typedef unsigned char u_int8_t;
+typedef short int16_t;
+typedef unsigned short u_int16_t;
+typedef int int32_t;
+typedef unsigned int u_int32_t;
+typedef long long int64_t;
+typedef unsigned long long u_int64_t;
+
+typedef int32_t register_t;
+
+typedef unsigned char u_char;
+typedef unsigned short u_short;
+typedef unsigned int u_int;
+typedef unsigned long u_long;
+
+typedef u_int64_t u_quad_t;
+typedef int64_t quad_t;
+typedef quad_t * qaddr_t;
+
+typedef u_int32_t size_t;
+# 5 "mmu.h" 2
+# 101 "mmu.h"
+void bcopy(const void *, void *, size_t);
+void bzero(void *, size_t);
+
+extern char bootstacktop[], bootstack[];
+
+extern u_long npage;
+
+typedef u_long Pde;
+# 2 "pmap.c" 2
+# 1 "pmap.h" 1
+
+
+
+
+# 1 "queue.h" 1
+# 6 "pmap.h" 2
+
+
+struct Page_list { struct Page *lh_first; };
+typedef struct { struct Page *le_next; struct Page **le_prev; } Page_LIST_entry_t;
+
+struct Page {
+ Page_LIST_entry_t pp_link;
+
+
+
+
+
+
+ u_short pp_ref;
+};
+
+void i386_detect_memory(void);
+
+void mips_vm_init();
+# 3 "pmap.c" 2
+# 1 "printf.h" 1
+# 15 "printf.h"
+# 1 "/usr/eldk/usr/bin/../lib/gcc/mips-linux/4.0.0/include/stdarg.h" 1 3 4
+# 43 "/usr/eldk/usr/bin/../lib/gcc/mips-linux/4.0.0/include/stdarg.h" 3 4
+typedef __builtin_va_list __gnuc_va_list;
+# 105 "/usr/eldk/usr/bin/../lib/gcc/mips-linux/4.0.0/include/stdarg.h" 3 4
+typedef __gnuc_va_list va_list;
+# 16 "printf.h" 2
+void printf(char *fmt, ...);
+
+void _panic(const char *, int, const char *, ...)
+ __attribute__((noreturn));
+# 4 "pmap.c" 2
+# 1 "env.h" 1
+# 19 "env.h"
+struct Env {
+
+ struct { struct Env *le_next; struct Env **le_prev; } env_link;
+ u_int env_id;
+ u_int env_parent_id;
+ u_int env_status;
+ Pde *env_pgdir;
+ u_int env_cr3;
+
+
+ u_int env_ipc_value;
+ u_int env_ipc_from;
+ u_int env_ipc_recving;
+ u_int env_ipc_dstva;
+ u_int env_ipc_perm;
+
+
+ u_int env_pgfault_handler;
+ u_int env_xstacktop;
+
+
+ u_int env_runs;
+};
+# 5 "pmap.c" 2
+# 1 "error.h" 1
+# 6 "pmap.c" 2
+
+
+
+u_long maxpa;
+u_long npage;
+u_long basemem;
+u_long extmem;
+
+Pde* boot_pgdir;
+
+struct Page *pages;
+static u_long freemem;
+
+
+void mips_detect_memory()
+{
+
+ basemem = 64*1024*1024;
+ extmem = 0;
+ maxpa = basemem;
+
+ npage = maxpa / 4096;
+
+ printf("Physical memory: %dK available, ", (int)(maxpa/1024));
+ printf("base = %dK, extended = %dK\n", (int)(basemem/1024), (int)(extmem/1024));
+}
+
+static void * alloc(u_int n, u_int align, int clear)
+{
+ extern char end[];
+ void *v;
+ u_long alloced_mem;
+
+ if (freemem == 0)
+  freemem = (u_long)end;
+
+ printf("pmap.c:\talloc from %x",freemem);
+
+
+ freemem = (((((u_long)(freemem))+(align)-1)) & ~((align)-1));
+
+ alloced_mem = freemem;
+
+ freemem = freemem + n;
+
+
+ printf(" to %x\n",freemem);
+
+ if (({ u_long a = (u_long) (freemem); if (a < 0x80000000) _panic("pmap.c", 54, "PADDR called with invalid kva %08lx", a); a - 0x80000000; }) >= maxpa)
+ {
+  _panic("pmap.c", 56, "out of memorty\n");
+   return -4;
+ }
+
+ if(clear) bzero(alloced_mem,n);
+
+ return alloced_mem;
+
+}
+
+static Pde* boot_pgdir_walk(Pde *pgdir, u_long va, int create)
+{
+
+ if(va>=0x80000000) _panic("pmap.c", 69, "mmu only working in low 2G space!\n");
+
+ printf("pmap.c:\tboot_pgdir_walk()\tva=%x\tpte=%x\n",va,(int)(&pgdir[((((u_long)(va))>>12) & 0x0FFFFF)*2]));
+
+ return (Pde*)(&pgdir[((((u_long)(va))>>12) & 0x0FFFFF)*2]);
+}
+
+
+
+
+
+
+static void boot_map_segment(Pde *pgdir, u_long va, u_long size, u_long pa, int perm)
+{
+ int i;
+ int perm_p;
+ u_long va_temp;
+ Pde *pgtable_entry;
+
+ if(size%4096!=0) _panic("pmap.c", 88, "size is not a multiple of BY2PG\n");
+
+ if(va>=0x80000000) _panic("pmap.c", 90, "mmu only working in low 2G space!\n");
+
+ perm_p = perm|0x002;
+
+ for(i = 0;i < size;i+=4096)
+ {
+  va_temp = va+i;
+  pgtable_entry = boot_pgdir_walk(pgdir, va_temp,1);
+  *pgtable_entry = ((((u_long)(pa + i))>> 2) & 0x3FFFFFC0 )|perm_p;
+  printf("pmap.c:\tmap()\tva=%x\tpa=%x\n",va_temp,pa+i);
+ }
+
+ return;
+}
+
+
+void mips_vm_init()
+{
+ extern char KVPT[];
+ extern struct Env *envs;
+ Pde* pgdir;
+ u_int n;
+
+ pgdir = (u_long *) KVPT;
+
+ boot_pgdir=pgdir;
+ printf("pmap.c:\tinit()\tKVPT:%x\n",(int)(&pgdir));
+
+ _panic("pmap.c", 118, "-------------------init not finish-------------");
+
+ pages = (struct Page*)alloc(npage*sizeof(struct Page),4096,1);
+ n = (((((u_long)(npage * sizeof(struct Page)))+(4096)-1)) & ~((4096)-1));
+ boot_map_segment(pgdir,((0x80000000 - (4*1024*1024)) - (4*1024*1024)),n,({ u_long a = (u_long) (pages); if (a < 0x80000000) _panic("pmap.c", 122, "PADDR called with invalid kva %08lx", a); a - 0x80000000; }),0x018|0x004);
+
+
+ envs = (struct Env*)alloc((1<<10)*sizeof(struct Env),4096,1);
+ boot_map_segment(pgdir,(((0x80000000 - (4*1024*1024)) - (4*1024*1024)) - (4*1024*1024)),(1<<10)*sizeof(struct Env),({ u_long a = (u_long) (envs); if (a < 0x80000000) _panic("pmap.c", 126, "PADDR called with invalid kva %08lx", a); a - 0x80000000; }),0x018|0x004);
+
+}

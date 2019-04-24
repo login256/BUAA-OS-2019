@@ -9,8 +9,6 @@ machine(
 
 	memory(64)	
 
-	disk("fsformat")
-
 	load("vmlinux")
 
 )

@@ -5,7 +5,7 @@
 #define __NR_SYSCALLS 20
 
 
-#define SYS_putchar 		((__SYSCALL_BASE ) + (0 ) ) 
+#define SYS_putchar 		((__SYSCALL_BASE ) + (0 ) )
 #define SYS_getenvid 		((__SYSCALL_BASE ) + (1 ) )
 #define SYS_yield			((__SYSCALL_BASE ) + (2 ) )
 #define SYS_env_destroy		((__SYSCALL_BASE ) + (3 ) )
