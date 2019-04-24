@@ -14,7 +14,7 @@ void mips_init()
 	page_init();
 	
 	env_init();
-	//env_check();
+	env_check();
 
 	/*you can create some processes(env) here. in terms of binary code, please refer current directory/code_a.c
 	 * code_b.c*/
