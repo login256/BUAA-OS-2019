@@ -63,9 +63,12 @@ u_int sys_getenvid(void)
  */
 void sys_yield(void)
 {
+	/*
 	bcopy((void *)KERNEL_SP - sizeof(struct Trapframe), &(curenv->env_tf), sizeof(struct Trapframe));
 	curenv->env_tf.pc = curenv->env_tf.cp0_epc;
 	curenv = NULL;
+	*/
+	bcopy((void *)KERNEL_SP - sizeof(struct Trapframe), (void *)TIMESTACK - sizeof(struct Trapframe), sizeof(struct Trapframe));
 	sched_yield();
 }
 

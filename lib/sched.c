@@ -49,23 +49,47 @@ void sched_yield(void)
 	static u_int cur_lasttime = 1;
 	static int cur_head_index = 0;
 	struct Env *next_env;
+	int now_have = 0;
 	cur_lasttime--;
-	if (cur_lasttime == 0 || curenv == NULL)
+	if (cur_lasttime <= 0 || curenv == NULL || curenv->env_status != ENV_RUNNABLE)
 	{
-		if (curenv != NULL)
+		now_have = 0;
+		while(1)
 		{
-			LIST_INSERT_HEAD(&env_sched_list[!cur_head_index], curenv, env_sched_link);
+			if (LIST_EMPTY(&env_sched_list[cur_head_index]))
+			{
+				cur_head_index = !cur_head_index;
+				break;
+			}
+			next_env = LIST_FIRST(&env_sched_list[cur_head_index]);
+			if (next_env->env_status == ENV_RUNNABLE)
+			{
+				now_have = 1;
+				break;
+			}
+			LIST_REMOVE(next_env, env_sched_link);
+			LIST_INSERT_HEAD(&env_sched_list[!cur_head_index], next_env, env_sched_link);
 		}
-		if (LIST_EMPTY(&env_sched_list[cur_head_index]))
+		if (!now_have)
 		{
-			cur_head_index = !cur_head_index;
+			while (1)
+			{
+				if (LIST_EMPTY(&env_sched_list[cur_head_index]))
+				{
+					panic("^^^^^^No env is RUNNABLE!^^^^^^");
+				}
+				next_env = LIST_FIRST(&env_sched_list[cur_head_index]);
+				if (next_env->env_status == ENV_RUNNABLE)
+				{
+					now_have = 1;
+					break;
+				}
+				LIST_REMOVE(next_env, env_sched_link);
+				LIST_INSERT_HEAD(&env_sched_list[!cur_head_index], next_env, env_sched_link);
+			}
 		}
-		if (LIST_EMPTY(&env_sched_list[cur_head_index]))
-		{
-			panic("^^^^^^No env is RUNNABLE!^^^^^^");
-		}
-		next_env = LIST_FIRST(&env_sched_list[cur_head_index]);
 		LIST_REMOVE(next_env, env_sched_link);
+		LIST_INSERT_HEAD(&env_sched_list[!cur_head_index], next_env, env_sched_link);
 		cur_lasttime = next_env->env_pri;
 		env_run(next_env);
 	}

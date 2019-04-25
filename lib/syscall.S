@@ -23,6 +23,7 @@ NESTED(handle_sys,TF_SIZE, sp)
 	nop
 IS_BD:
 BD_IF_END:
+	sw		t0, TF_EPC(sp)
 
     // TODO: Copy the syscall number into $a0.
 
