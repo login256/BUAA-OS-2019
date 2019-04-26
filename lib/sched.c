@@ -18,7 +18,6 @@ extern struct Env *curenv;
 void sched_yield(void)
 {
 	/*
-	//printf("Sched_yield happen\n");
 	static u_int cur_lasttime = 1;
 	struct Env *next_env;
 	cur_lasttime--;
@@ -46,7 +45,8 @@ void sched_yield(void)
 	//printf("%x",*((int*)(TF_EPC + TIMESTACK - TF_SIZE)));
 	//printf("Sched_yield End\n");
 	*/
-	static u_int cur_lasttime = 1;
+	//printf("Sched_yield happen\n");
+	static int cur_lasttime = 1;
 	static int cur_head_index = 0;
 	struct Env *next_env;
 	int now_have = 0;
@@ -92,6 +92,7 @@ void sched_yield(void)
 		LIST_INSERT_HEAD(&env_sched_list[!cur_head_index], next_env, env_sched_link);
 		cur_lasttime = next_env->env_pri;
 		env_run(next_env);
+		panic("^^^^^^sched yield jump faild^^^^^^");
 	}
 	env_run(curenv);
 	panic("^^^^^^sched yield reached end^^^^^^");

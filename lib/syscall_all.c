@@ -118,6 +118,14 @@ int sys_set_pgfault_handler(int sysno, u_int envid, u_int func, u_int xstacktop)
 	struct Env *env;
 	int ret;
 
+	ret = envid2env(envid, &env, 1);
+	if (ret < 0)
+	{
+		return ret;
+	}
+
+	env->env_pgfault_handler = func;
+	env->env_xstacktop = xstacktop;
 
 	return 0;
 	//	panic("sys_set_pgfault_handler not implemented");
@@ -146,6 +154,7 @@ int sys_mem_alloc(int sysno, u_int envid, u_int va, u_int perm)
 	struct Env *env;
 	struct Page *ppage;
 	int ret;
+	//printf("sys_mem_alloc %x %x\n",envid, va);
 	ret = 0;
 	if (va >= UTOP)
 	{
@@ -195,7 +204,7 @@ int sys_mem_map(int sysno, u_int srcid, u_int srcva, u_int dstid, u_int dstva,
 	struct Env *dstenv;
 	struct Page *ppage;
 	Pte *ppte;
-
+	//printf("map %x %x ",srcid, dstid);
 	ppage = NULL;
 	ret = 0;
 	round_srcva = ROUNDDOWN(srcva, BY2PG);
@@ -208,10 +217,10 @@ int sys_mem_map(int sysno, u_int srcid, u_int srcva, u_int dstid, u_int dstva,
 		return -E_INVAL;
 	}
 	// shoule i need to check PTE_V?
-	if (perm & PTE_COW)
-	{
-		return -E_INVAL;
-	}
+	//if (perm & PTE_COW)
+	//{
+	//	return -E_INVAL;
+	//}
 	ret = envid2env(srcid, &srcenv, 1);
 	if (ret < 0)
 	{
@@ -223,18 +232,19 @@ int sys_mem_map(int sysno, u_int srcid, u_int srcva, u_int dstid, u_int dstva,
 		return ret;
 	}
 	
-	ppage = page_lookup(srcenv->env_pgdir, srcva, &ppte);
+	//printf("src:%x %x dst:%x %x %x\n", srcenv->env_pgdir, srcva,dstenv->env_pgdir, dstva, perm);
+	ppage = page_lookup(srcenv->env_pgdir, round_srcva, &ppte);
 	if (ppage == NULL)
 	{
 		return -E_INVAL;
 	}
-	if (((*ppte & PTE_R) == 0) && ((*ppte & PTE_R) == 1))
+	if (((*ppte & PTE_R) == 0) && ((perm & PTE_R) == 1))
 	{
 		return -E_INVAL;
 	}
 
 	ppage = pa2page(PTE_ADDR(*ppte));
-	ret = page_insert(dstenv->env_pgdir, ppage, dstva, perm);
+	ret = page_insert(dstenv->env_pgdir, ppage, round_dstva, perm);
 	if (ret < 0)
 	{
 		return ret;
@@ -255,6 +265,7 @@ int sys_mem_map(int sysno, u_int srcid, u_int srcva, u_int dstid, u_int dstva,
  */
 int sys_mem_unmap(int sysno, u_int envid, u_int va)
 {
+	//printf("unmap %x %x\n",envid, va);
 	// Your code here.
 	int ret;
 	struct Env *env;
@@ -293,7 +304,16 @@ int sys_env_alloc(void)
 	// Your code here.
 	int r;
 	struct Env *e;
-
+	r = env_alloc(&e, curenv->env_id);
+	if (r < 0)
+	{
+		return r;
+	}
+	e->env_status = ENV_NOT_RUNNABLE;
+	e->env_pri = curenv->env_pri;
+	bcopy((void *)KERNEL_SP - sizeof(struct Trapframe), (void *)&(e->env_tf), sizeof(struct Trapframe));
+	e->env_tf.pc = e->env_tf.cp0_epc;
+	e->env_tf.regs[2] = 0;
 
 	return e->env_id;
 	//	panic("sys_env_alloc not implemented");
@@ -316,7 +336,38 @@ int sys_set_env_status(int sysno, u_int envid, u_int status)
 	// Your code here.
 	struct Env *env;
 	int ret;
-
+	extern struct Env_list env_sched_list[];
+	struct Env *o;
+	if (status != ENV_RUNNABLE && status != ENV_NOT_RUNNABLE && status != ENV_FREE)
+	{
+		return -E_INVAL;
+	}
+	ret = envid2env(envid, &env, 1);
+	if (ret < 0)
+	{
+		return ret;
+	}
+	//printf("set status %x %d %x\n",envid, env->env_status, status);
+	/*
+	LIST_FOREACH(o, &env_sched_list[0], env_sched_link)
+	{
+		printf("%x ",o->env_id);
+	}
+	printf("\n");
+	LIST_FOREACH(o, &env_sched_list[1], env_sched_link)
+	{
+		printf("%x ",o->env_id);
+	}
+	printf("\n");
+	*/
+	if (status == ENV_FREE)
+	{
+		env_destroy(env);
+	}
+	else
+	{
+		env->env_status = status;
+	}
 	return 0;
 	//	panic("sys_env_set_status not implemented");
 }
@@ -405,6 +456,7 @@ int sys_ipc_can_send(int sysno, u_int envid, u_int value, u_int srcva,
 	int r;
 	struct Env *e;
 	struct Page *p;
+	Pte *pte;
 
 	if (srcva >= UTOP)
 	{
@@ -427,7 +479,16 @@ int sys_ipc_can_send(int sysno, u_int envid, u_int value, u_int srcva,
 	e->env_ipc_perm = perm;
 	e->env_ipc_recving = 0;
 	e->env_status = ENV_RUNNABLE;
-
+	
+	if (srcva != 0)
+	{
+		p = page_lookup(curenv->env_pgdir, srcva, &pte);
+		if (p == NULL)
+		{
+			return -E_INVAL;
+		}
+		page_insert(e->env_pgdir, p, e->env_ipc_dstva, perm);
+	}
 	return 0;
 }
 

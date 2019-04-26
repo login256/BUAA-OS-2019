@@ -363,7 +363,7 @@ page_insert(Pde *pgdir, struct Page *pp, u_long va, u_int perm)
 	u_int PERM;
 	Pte *pgtable_entry;
 	PERM = perm | PTE_V;
-
+	//printf("insert %x %x %x\n",pgdir, va, perm);
 	/* Step 1: Get corresponding page table entry. */
 	pgdir_walk(pgdir, va, 0, &pgtable_entry);
 
@@ -412,6 +412,7 @@ page_lookup(Pde *pgdir, u_long va, Pte **ppte)
 	/* Step 1: Get the page table entry. */
 	pgdir_walk(pgdir, va, 0, &pte);
 
+	//printf("lookup: %x %x %x\n", pgdir, va, *pte);
 	/* Hint: Check if the page table entry doesn't exist or is not valid. */
 	if (pte == 0) {
 		return 0;
@@ -447,6 +448,7 @@ page_remove(Pde *pgdir, u_long va)
 	Pte *pagetable_entry;
 	struct Page *ppage;
 
+	//printf("remove %x %x\n",pgdir, va);
 	/* Step 1: Get the page table entry, and check if the page table entry is valid. */
 	ppage = page_lookup(pgdir, va, &pagetable_entry);
 

@@ -57,6 +57,11 @@ int envid2env(u_int envid, struct Env **penv, int checkperm)
     /* Hint:
  *      *  If envid is zero, return the current environment.*/
     /*Step 1: Assign value to e using envid. */
+		if (envid == 0)
+		{
+			*penv = curenv;
+			return 0;
+		}
 		e = envs + ENVX(envid);
 
 
@@ -224,7 +229,7 @@ env_alloc(struct Env **new, u_int parent_id)
 
     /*Step 5: Remove the new Env from Env free list*/
 	LIST_REMOVE(e,env_link);
-	
+	LIST_INSERT_HEAD(&env_sched_list[0], e, env_sched_link);
 	*new = e;
 	return 0;
 }
@@ -397,7 +402,6 @@ env_create_priority(u_char *binary, int size, int priority)
 		load_icode(e, binary, size);
 		//printf("load OK!\n");
 	/*Step 4: (By myself) add this envPCB to env_sched_list[0]*/
-		LIST_INSERT_TAIL(&env_sched_list[0], e, env_sched_link);
 }
 /* Overview:
  * Allocates a new env with default priority value.
