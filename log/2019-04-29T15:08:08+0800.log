@@ -1,0 +1,144 @@
+Autotest: Begin at Mon Apr 29 15:08:08 CST 2019
+Begin build at Mon Apr 29 15:08:10 CST 2019
+Cleanning the project.................
+
+for d in mm user boot drivers init lib ;	\
+	do					\
+		make --directory=$d clean; \
+	done; \
+rm -rf *.o *~ gxemul/vmlinux
+make[1]: Entering directory '/usr/src/workdir/mm'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/mm'
+make[1]: Entering directory '/usr/src/workdir/user'
+rm -rf *~ *.o *.b.c *.x *.b
+make[1]: Leaving directory '/usr/src/workdir/user'
+make[1]: Entering directory '/usr/src/workdir/boot'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/boot'
+make[1]: Entering directory '/usr/src/workdir/drivers'
+for d in gxconsole; \
+	do				\
+		make --directory=$d clean; \
+	done
+make[2]: Entering directory '/usr/src/workdir/drivers/gxconsole'
+rm -rf *.o *~
+make[2]: Leaving directory '/usr/src/workdir/drivers/gxconsole'
+make[1]: Leaving directory '/usr/src/workdir/drivers'
+make[1]: Entering directory '/usr/src/workdir/init'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/init'
+make[1]: Entering directory '/usr/src/workdir/lib'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/lib'
+
+Building the project..................
+
+make --directory=mm
+make[1]: Entering directory '/usr/src/workdir/mm'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c pmap.c
+pmap.c: In function 'boot_map_segment':
+pmap.c:132: warning: unused variable 'va_temp'
+pmap.c: In function 'page_init':
+pmap.c:203: warning: statement with no effect
+pmap.c:198: warning: unused variable 'last'
+pmap.c: In function 'page_alloc':
+pmap.c:268: warning: passing argument 1 of 'bzero' makes pointer from integer without a cast
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c tlb_asm.S
+make[1]: Leaving directory '/usr/src/workdir/mm'
+make --directory=user
+make[1]: Entering directory '/usr/src/workdir/user'
+echo as entry.S
+as entry.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o entry.o entry.S
+entry.S: Assembler messages:
+entry.S:104: Warning: Used $at without ".set noat"
+echo as syscall_wrap.S
+as syscall_wrap.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o syscall_wrap.o syscall_wrap.S
+echo user1 cc printf.c
+user1 cc printf.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o printf.o printf.c
+echo user1 cc print.c
+user1 cc print.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o print.o print.c
+echo user1 cc libos.c
+user1 cc libos.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o libos.o libos.c
+echo user1 cc fork.c
+user1 cc fork.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o fork.o fork.c
+fork.c: In function 'pgfault':
+fork.c:101: warning: passing argument 1 of 'user_bcopy' makes pointer from integer without a cast
+fork.c:101: warning: passing argument 2 of 'user_bcopy' makes pointer from integer without a cast
+echo user1 cc pgfault.c
+user1 cc pgfault.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o pgfault.o pgfault.c
+echo user1 cc syscall_lib.c
+user1 cc syscall_lib.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o syscall_lib.o syscall_lib.c
+echo user1 cc ipc.c
+user1 cc ipc.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o ipc.o ipc.c
+echo user1 cc string.c
+user1 cc string.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o string.o string.c
+echo user1 cc fd.c
+user1 cc fd.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o fd.o fd.c
+echo user1 cc pageref.c
+user1 cc pageref.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o pageref.o pageref.c
+echo user1 cc file.c
+user1 cc file.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o file.o file.c
+echo user1 cc pipe.c
+user1 cc pipe.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o pipe.o pipe.c
+pipe.c: In function '_pipeisclosed':
+pipe.c:94: warning: unused variable 'runs'
+pipe.c:94: warning: unused variable 'pfp'
+pipe.c:94: warning: unused variable 'pfd'
+pipe.c:99: warning: control reaches end of non-void function
+pipe.c: In function 'piperead':
+pipe.c:134: warning: unused variable 'rbuf'
+pipe.c:133: warning: unused variable 'p'
+pipe.c:141: warning: 'i' is used uninitialized in this function
+pipe.c: In function 'pipewrite':
+pipe.c:160: warning: unused variable 'wbuf'
+pipe.c:159: warning: unused variable 'p'
+pipe.c:158: warning: unused variable 'i'
+echo user1 cc fsipc.c
+user1 cc fsipc.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o fsipc.o fsipc.c
+echo user1 cc console.c
+user1 cc console.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o console.o console.c
+echo user1 cc fprintf.c
+user1 cc fprintf.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o fprintf.o fprintf.c
+echo user1 cc smp_syscall_test.c
+user1 cc smp_syscall_test.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o smp_syscall_test.o smp_syscall_test.c
+smp_syscall_test.c: In function 'umain':
+smp_syscall_test.c:8: warning: implicit declaration of function 'syscall_super_multi_parameter'
+echo ld smp_syscall_test.b
+ld smp_syscall_test.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o smp_syscall_test.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o smp_syscall_test.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+smp_syscall_test.o: In function `umain':
+smp_syscall_test.c:(.text+0x58): undefined reference to `syscall_super_multi_parameter'
+smp_syscall_test.c:(.text+0xa8): undefined reference to `syscall_super_multi_parameter'
+smp_syscall_test.c:(.text+0xf0): undefined reference to `syscall_super_multi_parameter'
+smp_syscall_test.c:(.text+0x140): undefined reference to `syscall_super_multi_parameter'
+smp_syscall_test.c:(.text+0x184): undefined reference to `syscall_super_multi_parameter'
+smp_syscall_test.o:smp_syscall_test.c:(.text+0x1d4): more undefined references to `syscall_super_multi_parameter' follow
+make[1]: *** [smp_syscall_test.b] Error 1
+Makefile:40: recipe for target 'smp_syscall_test.b' failed
+rm smp_syscall_test.o
+make[1]: Leaving directory '/usr/src/workdir/user'
+make: *** [user] Error 2
+Makefile:39: recipe for target 'user' failed
+Compile Error!
+
+End build at Mon Apr 29 15:08:15 CST 2019
+[33m[01m[ You got 0 (of 100) this time. Mon Apr 29 15:08:15 CST 2019 ][0m
