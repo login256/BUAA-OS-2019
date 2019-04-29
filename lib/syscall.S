@@ -36,25 +36,49 @@ BD_IF_END:
     lw      t2, 0(t1)                   // t2 <- function entry of specific syscall
 
     lw      t0, TF_REG29(sp)            // t0 <- user's stack pointer
-    lw      t3, 16(t0)                  // t3 <- the 5th argument of msyscall
-    lw      t4, 20(t0)                  // t4 <- the 6th argument of msyscall
 
     // TODO: Allocate a space of six arguments on current kernel stack and copy the six arguments to proper location
     
 	lw		a0, TF_REG4(sp)
-	lw		a1, TF_REG5(sp)
-	lw		a2, TF_REG6(sp)
-	lw		a3, TF_REG7(sp)
-	addiu	sp, sp, -24
-	sw		t3, 16(sp)
-	sw		t4, 20(sp)
+	lw		a1, TF_REG6(sp)
+	lw		a2, TF_REG7(sp)
+	
+	lw		s1, TF_REG5(sp)
+
+	addiu	t4, s1, 1
+	sll		s2, t4, 2
+	subu	sp, sp, s2
+
+	addiu	t0, t0, 16
+
+	li		t3, 3
+	blt		s1, t3, IF_1_END
+	nop
+		lw		a3, 0(t0)
+		addiu	t0, t0, 4
+	IF_1_END:
+
+	li		t3, 4
+	addiu	t5, sp, 16
+
+	FOR_1_BEGIN:
+	bgt		t3, s1, FOR_1_END
+	nop
+		lw		t4, 0(t0)
+		addiu	t0, t0, 4
+		sw		t4, 0(t5)
+		addiu	t5, t5, 4
+	addiu	t3, t3, 1
+	j FOR_1_BEGIN
+	nop
+	FOR_1_END:
     
     jalr    t2                          // Invoke sys_* function
     nop
     
     // TODO: Resume current kernel stack
     
-	addiu	sp, sp, 24
+	addu	sp, sp, s2
 
     sw      v0, TF_REG2(sp)             // Store return value of function sys_* (in $v0) into trapframe
 
