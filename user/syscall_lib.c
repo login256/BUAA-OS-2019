@@ -87,3 +87,9 @@ syscall_cgetc()
 {
 	return msyscall(SYS_cgetc, 5, 0, 0, 0, 0, 0);
 }
+
+int
+syscall_super_multi_parameter(u_int a, u_int b, u_int c, u_int d, u_int e, u_int f, u_int g, u_int h)
+{
+	return msyscall(SYS_smp, 8, a, b, c, d, e, f, g, h);
+}
