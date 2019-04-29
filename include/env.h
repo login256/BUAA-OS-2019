@@ -50,7 +50,7 @@ extern struct Env *curenv;	        // the current env
 extern struct Env_list env_sched_list[2]; // runnable env list
 
 void env_init(void);
-innenv_alloc(struct Env **e, u_int parent_id);
+int innenv_alloc(struct Env **e, u_int parent_id);
 void env_free(struct Env *);
 void env_create_priority(u_char *binary, int size, int priority);
 void env_create(u_char *binary, int size);

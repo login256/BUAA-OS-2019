@@ -81,7 +81,7 @@ void user_bzero(void *v, u_int n)
 static void
 pgfault(u_int va)
 {
-	u_int tmp;
+	u_int *tmp;
 	int ret;
 	//	writef("fork.c:pgfault():\t va:%x\n",va);
     if ((((Pte *)(*vpt))[VPN(va)] & PTE_COW) == 0)
@@ -135,15 +135,13 @@ duppage(u_int envid, u_int pn)
 {
 	u_int addr;
 	u_int perm;
+	writef("%x\n",((Pte *)(*vpt))[pn]);
 	addr = pn << PGSHIFT;
 	perm = ((Pte *)(*vpt))[pn] & 0xfff;
-	//writef("%x %x\n",addr, ((Pte *)(*vpt))[pn]);
-	/*
 	if (addr == UTOP - 2 * BY2PG)
 	{
 		writef("here\n");
 	}
-	*/
 	if ((perm & PTE_R) == 0)
 	{
 		if(syscall_mem_map(0, addr, envid, addr, perm) < 0)
@@ -189,17 +187,6 @@ duppage(u_int envid, u_int pn)
  * Note: `set_pgfault_handler`(user/pgfault.c) is different from 
  *       `syscall_set_pgfault_handler`. 
  */
-/*
-void pr(int pn)
-{
-	writef("%x\n",(*vpt)[pn]);
-}
-int volatile fuck()
-{
-	int volatile myfuck = 233;
-	return myfuck * 2333;
-}
-*/
 extern void __asm_pgfault_handler(void);
 int
 fork(void)
@@ -223,12 +210,19 @@ fork(void)
 		return 0;
 	}
 	//writef("%x",newenvid);
+
 	//writef("begin\n");
-	for (i = 0; i < UTOP -  2 * BY2PG; i += BY2PG)
+
+	for (i = 0; i < UTOP -  1 * BY2PG; i += BY2PG)
 	{
 		if ((((Pde *)(*vpd))[i >> PDSHIFT] & PTE_V) && (((Pte *)(*vpt))[i >> PGSHIFT] & PTE_V))
 		{
-			//writef("%x\n",(*vpt)[VPN(i)]);
+			u_int a = (*vpt)[i >> PGSHIFT]; 
+			u_int b = (*vpt)[i >> PGSHIFT]; 
+			u_int c = (*vpt)[i >> PGSHIFT];
+			writef("%x %x %x ",a, b, c);
+			writef("%x\n", VPN(UTOP-2*BY2PG));
+			writef("%x\n", VPN(UTOP-2*BY2PG));
 			duppage(newenvid, VPN(i));
 		}
 	}
