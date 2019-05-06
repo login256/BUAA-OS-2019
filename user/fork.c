@@ -208,8 +208,8 @@ fork(void)
 	u_int newenvid;
 	extern struct Env *envs;
 	extern struct Env *env;
-	u_int i;
-	//u_int i,j;
+	//u_int i;
+	u_int i,j;
 	int ret;
 
 
