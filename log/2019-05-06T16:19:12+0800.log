@@ -1,0 +1,89 @@
+Autotest: Begin at Mon May  6 16:19:12 CST 2019
+Begin build at Mon May  6 16:19:13 CST 2019
+Cleanning the project.................
+
+for d in mm user boot drivers init lib ;	\
+	do					\
+		make --directory=$d clean; \
+	done; \
+rm -rf *.o *~ gxemul/vmlinux
+make[1]: Entering directory '/usr/src/workdir/mm'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/mm'
+make[1]: Entering directory '/usr/src/workdir/user'
+rm -rf *~ *.o *.b.c *.x *.b
+make[1]: Leaving directory '/usr/src/workdir/user'
+make[1]: Entering directory '/usr/src/workdir/boot'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/boot'
+make[1]: Entering directory '/usr/src/workdir/drivers'
+for d in gxconsole; \
+	do				\
+		make --directory=$d clean; \
+	done
+make[2]: Entering directory '/usr/src/workdir/drivers/gxconsole'
+rm -rf *.o *~
+make[2]: Leaving directory '/usr/src/workdir/drivers/gxconsole'
+make[1]: Leaving directory '/usr/src/workdir/drivers'
+make[1]: Entering directory '/usr/src/workdir/init'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/init'
+make[1]: Entering directory '/usr/src/workdir/lib'
+rm -rf *~ *.o
+make[1]: Leaving directory '/usr/src/workdir/lib'
+
+Building the project..................
+
+make --directory=mm
+make[1]: Entering directory '/usr/src/workdir/mm'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c pmap.c
+pmap.c: In function 'boot_map_segment':
+pmap.c:132: warning: unused variable 'va_temp'
+pmap.c: In function 'page_init':
+pmap.c:203: warning: statement with no effect
+pmap.c:198: warning: unused variable 'last'
+pmap.c: In function 'page_alloc':
+pmap.c:271: warning: passing argument 1 of 'bzero' makes pointer from integer without a cast
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c tlb_asm.S
+make[1]: Leaving directory '/usr/src/workdir/mm'
+make --directory=user
+make[1]: Entering directory '/usr/src/workdir/user'
+echo as entry.S
+as entry.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o entry.o entry.S
+entry.S: Assembler messages:
+entry.S:104: Warning: Used $at without ".set noat"
+echo as syscall_wrap.S
+as syscall_wrap.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o syscall_wrap.o syscall_wrap.S
+echo user1 cc printf.c
+user1 cc printf.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -S printf.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o printf.o printf.c
+echo user1 cc print.c
+user1 cc print.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -S print.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o print.o print.c
+echo user1 cc libos.c
+user1 cc libos.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -S libos.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o libos.o libos.c
+echo user1 cc fork.c
+user1 cc fork.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -S fork.c
+fork.c: In function 'pgfault':
+fork.c:101: warning: passing argument 1 of 'user_bcopy' makes pointer from integer without a cast
+fork.c:101: warning: passing argument 2 of 'user_bcopy' makes pointer from integer without a cast
+fork.c: In function 'fork':
+fork.c:242: error: 'j' undeclared (first use in this function)
+fork.c:242: error: (Each undeclared identifier is reported only once
+fork.c:242: error: for each function it appears in.)
+Makefile:38: recipe for target 'fork.o' failed
+make[1]: Leaving directory '/usr/src/workdir/user'
+make[1]: *** [fork.o] Error 1
+Makefile:39: recipe for target 'user' failed
+make: *** [user] Error 2
+Compile Error!
+
+End build at Mon May  6 16:19:20 CST 2019
+[33m[01m[ You got 0 (of 100) this time. Mon May  6 16:19:20 CST 2019 ][0m
