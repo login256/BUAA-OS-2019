@@ -270,6 +270,54 @@ fork(void)
 
 	return newenvid;
 }
+
+
+static void
+copypage(u_int envid, u_int pn)
+{
+	u_int addr;
+	u_int perm;
+	addr = pn << PGSHIFT;
+	perm = ((Pte *)(*vpt))[pn] & 0xfff;
+	//writef("%x %x\n",addr, ((Pte *)(*vpt))[pn]);
+	/*
+	if (addr == UTOP - 2 * BY2PG)
+	{
+		writef("here\n");
+	}
+	*/
+	if ((perm & PTE_R) == 0)
+	{
+		if(syscall_mem_map(0, addr, envid, addr, perm) < 0)
+		{
+			user_panic("user panic mem map error!1");
+		}
+	}
+	else if (perm & PTE_LIBRARY)
+	{
+		if(syscall_mem_map(0, addr, envid, addr, perm) < 0)
+		{
+			user_panic("user panic mem map error!2");
+		}
+	}
+	else if (perm & PTE_COW)
+	{
+		if(syscall_mem_map(0, addr, envid, addr, perm) < 0)
+		{
+			user_panic("user panic mem map error!3");
+		}
+	}
+	else
+	{	
+		if(syscall_mem_map(0, addr, envid, addr, perm) < 0)
+		{
+			user_panic("user panic mem map error!4");
+		}
+	}
+
+	//	user_panic("duppage not implemented");
+}
+
 int
 tfork(void)
 {
@@ -294,12 +342,22 @@ tfork(void)
 	}
 	//writef("%x",newenvid);
 	//writef("begin\n");
-	for (i = 0; i < 2 * PDMAP; i += BY2PG)
+	/*
+	for (i = 0; i < PDMAP; i += BY2PG)
 	{
 		if ((((Pde *)(*vpd))[i >> PDSHIFT] & PTE_V) && (((Pte *)(*vpt))[i >> PGSHIFT] & PTE_V))
 		{
 			//writef("%x\n",(*vpt)[VPN(i)]);
 			duppage(newenvid, VPN(i));
+		}
+	}
+	*/
+	for (i = 0; i < USTACKTOP - BY2PG; i += BY2PG)
+	{
+		if ((((Pde *)(*vpd))[i >> PDSHIFT] & PTE_V) && (((Pte *)(*vpt))[i >> PGSHIFT] & PTE_V))
+		{
+			//writef("%x\n",(*vpt)[VPN(i)]);
+			copypage(newenvid, VPN(i));
 		}
 	}
 	duppage(newenvid, VPN(USTACKTOP - BY2PG));

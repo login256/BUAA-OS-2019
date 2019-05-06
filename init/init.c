@@ -22,12 +22,13 @@ void mips_init()
 	//ENV_CREATE_PRIORITY(user_try_out2,1);
 	//ENV_CREATE(user_try);
 	//ENV_CREATE(user_fktest);
-	ENV_CREATE(user_pingpong);
+	//ENV_CREATE(user_pingpong);
 	//ENV_CREATE(user_try_fk);
 	//ENV_CREATE(user_pingpong_a);
 	//ENV_CREATE(user_pingpong_b);
-	ENV_CREATE(user_try_shhfk);
+	//ENV_CREATE(user_try_shhfk);
 	//ENV_CREATE(user_try_manyfork);
+	ENV_CREATE(user_try_tfk);
     trap_init();
 	kclock_init();
 
