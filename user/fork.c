@@ -382,17 +382,20 @@ tfork(void)
 	ret = syscall_mem_alloc(newenvid, UXSTACKTOP - BY2PG, PTE_V | PTE_R);
 	if (ret < 0)
 	{
+		return ret;
 		user_panic("fork alloc mem faild");
 	}
 	ret = syscall_set_pgfault_handler(newenvid, __asm_pgfault_handler, UXSTACKTOP);
 	if (ret < 0)
 	{
+		return ret;
 		user_panic("fork set pgfault faild");
 	}
 
 	ret = syscall_set_env_status(newenvid, ENV_RUNNABLE);
 	if (ret < 0)
 	{
+		return ret;
 		user_panic("fork set status faild");
 	}
 
