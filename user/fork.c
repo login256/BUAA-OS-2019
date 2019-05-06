@@ -270,7 +270,68 @@ fork(void)
 
 	return newenvid;
 }
+int
+tfork(void)
+{
+	// Your code here.
+	u_int newenvid;
+	extern struct Env *envs;
+	extern struct Env *env;
+	u_int i;
+	//u_int i,j;
+	int ret;
 
+
+	//The parent installs pgfault using set_pgfault_handler
+	set_pgfault_handler(pgfault);
+	//alloc a new alloc
+
+	newenvid = syscall_env_alloc();
+	if (newenvid == 0)
+	{
+		env = envs + ENVX(syscall_getenvid());
+		return 0;
+	}
+	//writef("%x",newenvid);
+	//writef("begin\n");
+	duppage(newenvid, VPN(USTACKTOP - BY2PG));
+	/*
+	for (i = 0; i < 1024; i++)
+	{
+		if ((*vpd)[i] & PTE_V)
+		{
+			for (j = 0; j < 1024; j++)
+			{
+				if ((i << PDSHIFT) + ( j << PGSHIFT) < UTOP - 2 * BY2PG)
+				{
+					if ((*vpt)[(i << 10) + j] & PTE_V)
+					{
+						duppage(newenvid, (i << 10) + j);
+					}
+				}
+			}
+		}
+	}
+	*/
+	ret = syscall_mem_alloc(newenvid, UXSTACKTOP - BY2PG, PTE_V | PTE_R);
+	if (ret < 0)
+	{
+		user_panic("fork alloc mem faild");
+	}
+	ret = syscall_set_pgfault_handler(newenvid, __asm_pgfault_handler, UXSTACKTOP);
+	if (ret < 0)
+	{
+		user_panic("fork set pgfault faild");
+	}
+
+	ret = syscall_set_env_status(newenvid, ENV_RUNNABLE);
+	if (ret < 0)
+	{
+		user_panic("fork set status faild");
+	}
+
+	return newenvid;
+}
 // Challenge!
 int
 sfork(void)
