@@ -294,6 +294,14 @@ tfork(void)
 	}
 	//writef("%x",newenvid);
 	//writef("begin\n");
+	for (i = 0; i < 2 * PDMAP; i += BY2PG)
+	{
+		if ((((Pde *)(*vpd))[i >> PDSHIFT] & PTE_V) && (((Pte *)(*vpt))[i >> PGSHIFT] & PTE_V))
+		{
+			//writef("%x\n",(*vpt)[VPN(i)]);
+			duppage(newenvid, VPN(i));
+		}
+	}
 	duppage(newenvid, VPN(USTACKTOP - BY2PG));
 	/*
 	for (i = 0; i < 1024; i++)
