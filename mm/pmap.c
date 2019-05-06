@@ -222,11 +222,13 @@ page_init(void)
 		last=now;
 	}
 	*/
+	
 	for (now = &pages[PPN(PADDR(freemem))]; page2ppn(now) < npage; now++)
 	{
 		now->pp_ref = 0;
 		LIST_INSERT_HEAD(&page_free_list, now, pp_link);
 	}
+	
 	/*
 	for (now = &pages[npage - 1]; now >= &pages[PPN(PADDR(freemem))]; now--)
 	{
@@ -234,6 +236,7 @@ page_init(void)
 		LIST_INSERT_HEAD(&page_free_list, now, pp_link);
 	}
 	*/
+	
 }
 
 /*Overview:

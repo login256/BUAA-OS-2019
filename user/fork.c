@@ -209,6 +209,7 @@ fork(void)
 	extern struct Env *envs;
 	extern struct Env *env;
 	u_int i;
+	//u_int i,j;
 	int ret;
 
 
@@ -232,6 +233,24 @@ fork(void)
 			duppage(newenvid, VPN(i));
 		}
 	}
+	/*
+	for (i = 0; i < 1024; i++)
+	{
+		if ((*vpd)[i] & PTE_V)
+		{
+			for (j = 0; j < 1024; j++)
+			{
+				if ((i << PDSHIFT) + ( j << PGSHIFT) < UTOP - 2 * BY2PG)
+				{
+					if ((*vpt)[(i << 10) + j] & PTE_V)
+					{
+						duppage(newenvid, (i << 10) + j);
+					}
+				}
+			}
+		}
+	}
+	*/
 	ret = syscall_mem_alloc(newenvid, UXSTACKTOP - BY2PG, PTE_V | PTE_R);
 	if (ret < 0)
 	{
