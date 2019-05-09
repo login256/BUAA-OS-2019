@@ -304,7 +304,9 @@ copypage(u_int envid, u_int pn)
 	}
 	else if (perm & PTE_COW)
 	{
-		pgfault(addr);
+		int v = * (int *)addr;
+		*(int *)addr = 1;
+		*(int *)addr = v;
 		perm = ((Pte *)(*vpt))[pn] & 0xfff;
 		if(syscall_mem_map(0, addr, envid, addr, perm) < 0)
 		{
