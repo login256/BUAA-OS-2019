@@ -2,10 +2,35 @@
 
 void umain()
 {
-	fork();
-	fork();
-	fork();
-	fork();
-	fork();
-	fork();
+	if(fork()==0)
+		if(fork()==0)
+			if(fork()==0)
+				if(fork()==0)
+					if(fork()==0)
+						if(fork()==0)
+							if(fork()==0)
+								if(fork()==0)
+									if(fork()==0)
+										if(fork()==0)
+											if(fork()==0)
+												if(fork()==0)
+													if(fork()==0)
+														if(fork()==0)
+															if(fork()==0)
+																if(fork()==0)
+																	if(fork()==0)
+																		if(fork()==0)
+																			if(fork()==0)
+																				if(fork()==0)
+																					if(fork()==0)
+																						if(fork()==0)
+																							if(fork()==0)
+																								if(fork()==0)
+																									if(fork()==0)
+																										if(fork()==0)
+																											if(fork()==0)
+																												if(fork()==0)
+																													if(fork()==0)
+																														if(fork()==0)
+																														{}
 }
