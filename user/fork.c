@@ -356,7 +356,7 @@ tfork(void)
 		}
 	}
 	*/
-	for (i = 0; i < USTACKTOP - BY2PG; i += BY2PG)
+	for (i = 0; i < USTACKTOP - 2 * BY2PG; i += BY2PG)
 	{
 		if ((((Pde *)(*vpd))[i >> PDSHIFT] & PTE_V) && (((Pte *)(*vpt))[i >> PGSHIFT] & PTE_V))
 		{
@@ -364,7 +364,14 @@ tfork(void)
 			copypage(newenvid, VPN(i));
 		}
 	}
-	duppage(newenvid, VPN(USTACKTOP - BY2PG));
+	for (; i < USTACKTOP; i += BY2PG)
+	{
+		if ((((Pde *)(*vpd))[i >> PDSHIFT] & PTE_V) && (((Pte *)(*vpt))[i >> PGSHIFT] & PTE_V))
+		{
+			//writef("%x\n",(*vpt)[VPN(i)]);
+			duppage(newenvid, VPN(i));
+		}
+	}
 	/*
 	for (i = 0; i < 1024; i++)
 	{
