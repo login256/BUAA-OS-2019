@@ -35,8 +35,8 @@ ipc_send(u_int whom, u_int val, u_int srcva, u_int perm)
 u_int
 ipc_recv(u_int *whom, u_int dstva, u_int *perm)
 {
-	//extern struct Env *envs;
-	//struct Env *env = envs + ENVX(syscall_getenvid());
+	extern struct Env *envs;
+	struct Env *env = envs + ENVX(syscall_getenvid());
 	//printf("ipc_recv:come 0\n");
 	syscall_ipc_recv(dstva);
 

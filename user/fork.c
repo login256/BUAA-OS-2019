@@ -225,7 +225,7 @@ fork(void)
 	}
 	//writef("%x",newenvid);
 	//writef("begin\n");
-	/*
+	
 	for (i = 0; i < UTOP -  2 * BY2PG; i += BY2PG)
 	{
 		if ((((Pde *)(*vpd))[i >> PDSHIFT] & PTE_V) && (((Pte *)(*vpt))[i >> PGSHIFT] & PTE_V))
@@ -234,7 +234,8 @@ fork(void)
 			duppage(newenvid, VPN(i));
 		}
 	}
-	*/
+	
+	/*
 	for (i = 0; i < 1024; i++)
 	{
 		if ((*vpd)[i] & PTE_V)
@@ -251,6 +252,7 @@ fork(void)
 			}
 		}
 	}
+	*/
 	ret = syscall_mem_alloc(newenvid, UXSTACKTOP - BY2PG, PTE_V | PTE_R);
 	if (ret < 0)
 	{
