@@ -327,6 +327,7 @@ copypage(u_int envid, u_int pn)
 int
 tfork(void)
 {
+	return fork();
 	// Your code here.
 	u_int newenvid;
 	extern struct Env *envs;
