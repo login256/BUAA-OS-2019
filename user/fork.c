@@ -302,10 +302,12 @@ copypage(u_int envid, u_int pn)
 	}
 	else if (perm & PTE_COW)
 	{
+		/*
 		int v = *(int *)addr;
 		*(int *)addr = 1;
 		*(int *)addr = v;
 		perm = ((Pte *)(*vpt))[pn] & 0xfff;
+		*/
 		if(syscall_mem_map(0, addr, envid, addr, perm) < 0)
 		{
 			user_panic("user panic mem map error!3");
@@ -356,7 +358,7 @@ tfork(void)
 		}
 	}
 	*/
-	for (i = 0; i < USTACKTOP - 0 * BY2PG; i += BY2PG)
+	for (i = 0; i < USTACKTOP - 1 * BY2PG; i += BY2PG)
 	{
 		if ((((Pde *)(*vpd))[i >> PDSHIFT] & PTE_V) && (((Pte *)(*vpt))[i >> PGSHIFT] & PTE_V))
 		{
