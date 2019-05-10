@@ -1,0 +1,785 @@
+Autotest: Begin at Fri May 10 22:37:13 CST 2019
+Begin build at Fri May 10 22:37:15 CST 2019
+Cleanning the project.................
+
+for d in boot drivers init lib mm user;	\
+		do					\
+			make --directory=$d clean; \
+		done; \
+	rm -rf *.o *~ gxemul/vmlinux
+make[1]: Entering directory `/usr/src/workdir/boot'
+rm -rf *~ *.o
+make[1]: Leaving directory `/usr/src/workdir/boot'
+make[1]: Entering directory `/usr/src/workdir/drivers'
+for d in gxconsole; \
+		do				\
+			make --directory=$d clean; \
+		done
+make[2]: Entering directory `/usr/src/workdir/drivers/gxconsole'
+rm -rf *.o *~
+make[2]: Leaving directory `/usr/src/workdir/drivers/gxconsole'
+make[1]: Leaving directory `/usr/src/workdir/drivers'
+make[1]: Entering directory `/usr/src/workdir/init'
+rm -rf *~ *.o
+make[1]: Leaving directory `/usr/src/workdir/init'
+make[1]: Entering directory `/usr/src/workdir/lib'
+rm -rf *~ *.o
+make[1]: Leaving directory `/usr/src/workdir/lib'
+make[1]: Entering directory `/usr/src/workdir/mm'
+rm -rf *~ *.o
+make[1]: Leaving directory `/usr/src/workdir/mm'
+make[1]: Entering directory `/usr/src/workdir/user'
+rm -rf *~ *.o *.b.c *.x *.b
+make[1]: Leaving directory `/usr/src/workdir/user'
+
+Building the project..................
+
+make --directory=boot
+make[1]: Entering directory `/usr/src/workdir/boot'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c start.S 
+make[1]: Leaving directory `/usr/src/workdir/boot'
+make --directory=drivers
+make[1]: Entering directory `/usr/src/workdir/drivers'
+make --directory=gxconsole
+make[2]: Entering directory `/usr/src/workdir/drivers/gxconsole'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC   -c -o console.o console.c
+make[2]: Leaving directory `/usr/src/workdir/drivers/gxconsole'
+make[1]: Leaving directory `/usr/src/workdir/drivers'
+make --directory=init
+make[1]: Entering directory `/usr/src/workdir/init'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c init.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c main.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c code.c
+make[1]: Leaving directory `/usr/src/workdir/init'
+make --directory=lib
+make[1]: Entering directory `/usr/src/workdir/lib'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c env.c
+env.c: In function 'env_alloc':
+env.c:204: warning: unused variable 'r'
+env.c: In function 'env_run':
+env.c:506: warning: assignment from incompatible pointer type
+env.c:515: warning: passing argument 1 of 'lcontext' makes integer from pointer without a cast
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c print.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c printf.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c sched.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c env_asm.S
+env_asm.S: Assembler messages:
+env_asm.S:62: Warning: Used $at without ".set noat"
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c kclock.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c traps.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c genex.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c kclock_asm.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c syscall.S
+syscall.S: Assembler messages:
+syscall.S:8: Warning: Used $at without ".set noat"
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c syscall_all.c
+syscall_all.c: In function 'sys_env_alloc':
+syscall_all.c:307: warning: implicit declaration of function 'env_alloc'
+syscall_all.c: In function 'sys_set_env_status':
+syscall_all.c:340: warning: unused variable 'o'
+syscall_all.c:339: warning: unused variable 'env_sched_list'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c getc.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c kernel_elfloader.c
+make[1]: Leaving directory `/usr/src/workdir/lib'
+make --directory=mm
+make[1]: Entering directory `/usr/src/workdir/mm'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c pmap.c
+pmap.c: In function 'boot_map_segment':
+pmap.c:132: warning: unused variable 'va_temp'
+pmap.c: In function 'page_init':
+pmap.c:203: warning: statement with no effect
+pmap.c:198: warning: unused variable 'last'
+pmap.c: In function 'page_alloc':
+pmap.c:271: warning: passing argument 1 of 'bzero' makes pointer from integer without a cast
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c tlb_asm.S
+make[1]: Leaving directory `/usr/src/workdir/mm'
+make --directory=user
+make[1]: Entering directory `/usr/src/workdir/user'
+echo as entry.S
+as entry.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o entry.o entry.S
+entry.S: Assembler messages:
+entry.S:104: Warning: Used $at without ".set noat"
+echo as syscall_wrap.S
+as syscall_wrap.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o syscall_wrap.o syscall_wrap.S
+echo user1 cc fktest.c
+user1 cc fktest.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o fktest.o fktest.c
+echo user1 cc printf.c
+user1 cc printf.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o printf.o printf.c
+echo user1 cc print.c
+user1 cc print.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o print.o print.c
+echo user1 cc libos.c
+user1 cc libos.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o libos.o libos.c
+echo user1 cc fork.c
+user1 cc fork.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o fork.o fork.c
+fork.c: In function 'pgfault':
+fork.c:101: warning: passing argument 1 of 'user_bcopy' makes pointer from integer without a cast
+fork.c:101: warning: passing argument 2 of 'user_bcopy' makes pointer from integer without a cast
+echo user1 cc pgfault.c
+user1 cc pgfault.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o pgfault.o pgfault.c
+echo user1 cc syscall_lib.c
+user1 cc syscall_lib.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o syscall_lib.o syscall_lib.c
+echo user1 cc ipc.c
+user1 cc ipc.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o ipc.o ipc.c
+echo user1 cc string.c
+user1 cc string.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o string.o string.c
+echo user1 cc fd.c
+user1 cc fd.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o fd.o fd.c
+echo user1 cc pageref.c
+user1 cc pageref.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o pageref.o pageref.c
+echo user1 cc file.c
+user1 cc file.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o file.o file.c
+echo user1 cc pipe.c
+user1 cc pipe.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o pipe.o pipe.c
+pipe.c: In function '_pipeisclosed':
+pipe.c:94: warning: unused variable 'runs'
+pipe.c:94: warning: unused variable 'pfp'
+pipe.c:94: warning: unused variable 'pfd'
+pipe.c:99: warning: control reaches end of non-void function
+pipe.c: In function 'piperead':
+pipe.c:134: warning: unused variable 'rbuf'
+pipe.c:133: warning: unused variable 'p'
+pipe.c:141: warning: 'i' is used uninitialized in this function
+pipe.c: In function 'pipewrite':
+pipe.c:160: warning: unused variable 'wbuf'
+pipe.c:159: warning: unused variable 'p'
+pipe.c:158: warning: unused variable 'i'
+echo user1 cc fsipc.c
+user1 cc fsipc.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o fsipc.o fsipc.c
+echo user1 cc console.c
+user1 cc console.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o console.o console.c
+echo user1 cc fprintf.c
+user1 cc fprintf.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o fprintf.o fprintf.c
+echo ld fktest.b
+ld fktest.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o fktest.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o fktest.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create fktest.b.c
+create fktest.b.c
+echo bintoc fktest fktest.b > fktest.b.c~
+chmod +x ./bintoc
+./bintoc fktest fktest.b > fktest.b.c~ && mv -f fktest.b.c~ fktest.b.c
+echo cc1 fktest.b.c
+cc1 fktest.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o fktest.x fktest.b.c
+echo user1 cc pingpong.c
+user1 cc pingpong.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o pingpong.o pingpong.c
+echo ld pingpong.b
+ld pingpong.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o pingpong.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o pingpong.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create pingpong.b.c
+create pingpong.b.c
+echo bintoc pingpong pingpong.b > pingpong.b.c~
+chmod +x ./bintoc
+./bintoc pingpong pingpong.b > pingpong.b.c~ && mv -f pingpong.b.c~ pingpong.b.c
+echo cc1 pingpong.b.c
+cc1 pingpong.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o pingpong.x pingpong.b.c
+echo user1 cc idle.c
+user1 cc idle.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o idle.o idle.c
+echo ld idle.b
+ld idle.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o idle.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o idle.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create idle.b.c
+create idle.b.c
+echo bintoc idle idle.b > idle.b.c~
+chmod +x ./bintoc
+./bintoc idle idle.b > idle.b.c~ && mv -f idle.b.c~ idle.b.c
+echo cc1 idle.b.c
+cc1 idle.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o idle.x idle.b.c
+echo user1 cc try_hw.c
+user1 cc try_hw.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o try_hw.o try_hw.c
+echo ld try_hw.b
+ld try_hw.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o try_hw.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o try_hw.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create try_hw.b.c
+create try_hw.b.c
+echo bintoc try_hw try_hw.b > try_hw.b.c~
+chmod +x ./bintoc
+./bintoc try_hw try_hw.b > try_hw.b.c~ && mv -f try_hw.b.c~ try_hw.b.c
+echo cc1 try_hw.b.c
+cc1 try_hw.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o try_hw.x try_hw.b.c
+echo user1 cc try_out1.c
+user1 cc try_out1.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o try_out1.o try_out1.c
+echo ld try_out1.b
+ld try_out1.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o try_out1.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o try_out1.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create try_out1.b.c
+create try_out1.b.c
+echo bintoc try_out1 try_out1.b > try_out1.b.c~
+chmod +x ./bintoc
+./bintoc try_out1 try_out1.b > try_out1.b.c~ && mv -f try_out1.b.c~ try_out1.b.c
+echo cc1 try_out1.b.c
+cc1 try_out1.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o try_out1.x try_out1.b.c
+echo user1 cc try_out2.c
+user1 cc try_out2.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o try_out2.o try_out2.c
+echo ld try_out2.b
+ld try_out2.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o try_out2.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o try_out2.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create try_out2.b.c
+create try_out2.b.c
+echo bintoc try_out2 try_out2.b > try_out2.b.c~
+chmod +x ./bintoc
+./bintoc try_out2 try_out2.b > try_out2.b.c~ && mv -f try_out2.b.c~ try_out2.b.c
+echo cc1 try_out2.b.c
+cc1 try_out2.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o try_out2.x try_out2.b.c
+echo user1 cc try_fk.c
+user1 cc try_fk.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o try_fk.o try_fk.c
+echo ld try_fk.b
+ld try_fk.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o try_fk.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o try_fk.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create try_fk.b.c
+create try_fk.b.c
+echo bintoc try_fk try_fk.b > try_fk.b.c~
+chmod +x ./bintoc
+./bintoc try_fk try_fk.b > try_fk.b.c~ && mv -f try_fk.b.c~ try_fk.b.c
+echo cc1 try_fk.b.c
+cc1 try_fk.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o try_fk.x try_fk.b.c
+echo user1 cc pingpong_a.c
+user1 cc pingpong_a.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o pingpong_a.o pingpong_a.c
+echo ld pingpong_a.b
+ld pingpong_a.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o pingpong_a.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o pingpong_a.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create pingpong_a.b.c
+create pingpong_a.b.c
+echo bintoc pingpong_a pingpong_a.b > pingpong_a.b.c~
+chmod +x ./bintoc
+./bintoc pingpong_a pingpong_a.b > pingpong_a.b.c~ && mv -f pingpong_a.b.c~ pingpong_a.b.c
+echo cc1 pingpong_a.b.c
+cc1 pingpong_a.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o pingpong_a.x pingpong_a.b.c
+echo user1 cc pingpong_b.c
+user1 cc pingpong_b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o pingpong_b.o pingpong_b.c
+echo ld pingpong_b.b
+ld pingpong_b.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o pingpong_b.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o pingpong_b.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create pingpong_b.b.c
+create pingpong_b.b.c
+echo bintoc pingpong_b pingpong_b.b > pingpong_b.b.c~
+chmod +x ./bintoc
+./bintoc pingpong_b pingpong_b.b > pingpong_b.b.c~ && mv -f pingpong_b.b.c~ pingpong_b.b.c
+echo cc1 pingpong_b.b.c
+cc1 pingpong_b.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o pingpong_b.x pingpong_b.b.c
+echo user1 cc try_shhfk.c
+user1 cc try_shhfk.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o try_shhfk.o try_shhfk.c
+try_shhfk.c: In function 'umain':
+try_shhfk.c:6: warning: 'b[1]' may be used uninitialized in this function
+try_shhfk.c:6: warning: 'b[2]' may be used uninitialized in this function
+echo ld try_shhfk.b
+ld try_shhfk.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o try_shhfk.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o try_shhfk.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create try_shhfk.b.c
+create try_shhfk.b.c
+echo bintoc try_shhfk try_shhfk.b > try_shhfk.b.c~
+chmod +x ./bintoc
+./bintoc try_shhfk try_shhfk.b > try_shhfk.b.c~ && mv -f try_shhfk.b.c~ try_shhfk.b.c
+echo cc1 try_shhfk.b.c
+cc1 try_shhfk.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o try_shhfk.x try_shhfk.b.c
+echo user1 cc try_manyfork.c
+user1 cc try_manyfork.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o try_manyfork.o try_manyfork.c
+echo ld try_manyfork.b
+ld try_manyfork.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o try_manyfork.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o try_manyfork.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create try_manyfork.b.c
+create try_manyfork.b.c
+echo bintoc try_manyfork try_manyfork.b > try_manyfork.b.c~
+chmod +x ./bintoc
+./bintoc try_manyfork try_manyfork.b > try_manyfork.b.c~ && mv -f try_manyfork.b.c~ try_manyfork.b.c
+echo cc1 try_manyfork.b.c
+cc1 try_manyfork.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o try_manyfork.x try_manyfork.b.c
+echo user1 cc try_end.c
+user1 cc try_end.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o try_end.o try_end.c
+try_end.c: In function 'umain':
+try_end.c:6: warning: initialization makes integer from pointer without a cast
+echo ld try_end.b
+ld try_end.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o try_end.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o try_end.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create try_end.b.c
+create try_end.b.c
+echo bintoc try_end try_end.b > try_end.b.c~
+chmod +x ./bintoc
+./bintoc try_end try_end.b > try_end.b.c~ && mv -f try_end.b.c~ try_end.b.c
+echo cc1 try_end.b.c
+cc1 try_end.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o try_end.x try_end.b.c
+rm try_fk.b.c pingpong_b.o try_shhfk.b.c try_out1.o idle.o try_out2.o try_out2.b.c pingpong.b.c try_end.o try_manyfork.b.c try_hw.o pingpong_a.b.c idle.b try_fk.o fktest.b.c try_shhfk.o pingpong_b.b.c idle.b.c try_out1.b.c pingpong.o try_manyfork.o try_end.b.c try_hw.b.c pingpong_a.o fktest.o
+make[1]: Leaving directory `/usr/src/workdir/user'
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o gxemul/vmlinux -N -T tools/scse0_3.lds boot/start.o init/main.o init/init.o init/code.o drivers/gxconsole/console.o lib/*.o user/*.x mm/*.o
+
+End build at Fri May 10 22:37:21 CST 2019
+Begin build at Fri May 10 22:37:21 CST 2019
+Cleanning the project.................
+
+for d in mm user boot drivers init lib ;	\
+		do					\
+			make --directory=$d clean; \
+		done; \
+	rm -rf *.o *~ gxemul/vmlinux
+make[1]: Entering directory `/usr/src/workdir/mm'
+rm -rf *~ *.o
+make[1]: Leaving directory `/usr/src/workdir/mm'
+make[1]: Entering directory `/usr/src/workdir/user'
+rm -rf *~ *.o *.b.c *.x *.b
+make[1]: Leaving directory `/usr/src/workdir/user'
+make[1]: Entering directory `/usr/src/workdir/boot'
+rm -rf *~ *.o
+make[1]: Leaving directory `/usr/src/workdir/boot'
+make[1]: Entering directory `/usr/src/workdir/drivers'
+for d in gxconsole; \
+		do				\
+			make --directory=$d clean; \
+		done
+make[2]: Entering directory `/usr/src/workdir/drivers/gxconsole'
+rm -rf *.o *~
+make[2]: Leaving directory `/usr/src/workdir/drivers/gxconsole'
+make[1]: Leaving directory `/usr/src/workdir/drivers'
+make[1]: Entering directory `/usr/src/workdir/init'
+rm -rf *~ *.o
+make[1]: Leaving directory `/usr/src/workdir/init'
+make[1]: Entering directory `/usr/src/workdir/lib'
+rm -rf *~ *.o
+make[1]: Leaving directory `/usr/src/workdir/lib'
+
+Building the project..................
+
+make --directory=mm
+make[1]: Entering directory `/usr/src/workdir/mm'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c pmap.c
+pmap.c: In function 'boot_map_segment':
+pmap.c:132: warning: unused variable 'va_temp'
+pmap.c: In function 'page_init':
+pmap.c:203: warning: statement with no effect
+pmap.c:198: warning: unused variable 'last'
+pmap.c: In function 'page_alloc':
+pmap.c:271: warning: passing argument 1 of 'bzero' makes pointer from integer without a cast
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c tlb_asm.S
+make[1]: Leaving directory `/usr/src/workdir/mm'
+make --directory=user
+make[1]: Entering directory `/usr/src/workdir/user'
+echo as entry.S
+as entry.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o entry.o entry.S
+entry.S: Assembler messages:
+entry.S:104: Warning: Used $at without ".set noat"
+echo as syscall_wrap.S
+as syscall_wrap.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o syscall_wrap.o syscall_wrap.S
+echo user1 cc ppa.c
+user1 cc ppa.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o ppa.o ppa.c
+echo user1 cc printf.c
+user1 cc printf.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o printf.o printf.c
+echo user1 cc print.c
+user1 cc print.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o print.o print.c
+echo user1 cc libos.c
+user1 cc libos.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o libos.o libos.c
+echo user1 cc fork.c
+user1 cc fork.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o fork.o fork.c
+fork.c: In function 'pgfault':
+fork.c:101: warning: passing argument 1 of 'user_bcopy' makes pointer from integer without a cast
+fork.c:101: warning: passing argument 2 of 'user_bcopy' makes pointer from integer without a cast
+echo user1 cc pgfault.c
+user1 cc pgfault.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o pgfault.o pgfault.c
+echo user1 cc syscall_lib.c
+user1 cc syscall_lib.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o syscall_lib.o syscall_lib.c
+echo user1 cc ipc.c
+user1 cc ipc.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o ipc.o ipc.c
+echo user1 cc string.c
+user1 cc string.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o string.o string.c
+echo user1 cc fd.c
+user1 cc fd.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o fd.o fd.c
+echo user1 cc pageref.c
+user1 cc pageref.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o pageref.o pageref.c
+echo user1 cc file.c
+user1 cc file.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o file.o file.c
+echo user1 cc pipe.c
+user1 cc pipe.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o pipe.o pipe.c
+pipe.c: In function '_pipeisclosed':
+pipe.c:94: warning: unused variable 'runs'
+pipe.c:94: warning: unused variable 'pfp'
+pipe.c:94: warning: unused variable 'pfd'
+pipe.c:99: warning: control reaches end of non-void function
+pipe.c: In function 'piperead':
+pipe.c:134: warning: unused variable 'rbuf'
+pipe.c:133: warning: unused variable 'p'
+pipe.c:141: warning: 'i' is used uninitialized in this function
+pipe.c: In function 'pipewrite':
+pipe.c:160: warning: unused variable 'wbuf'
+pipe.c:159: warning: unused variable 'p'
+pipe.c:158: warning: unused variable 'i'
+echo user1 cc fsipc.c
+user1 cc fsipc.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o fsipc.o fsipc.c
+echo user1 cc console.c
+user1 cc console.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o console.o console.c
+echo user1 cc fprintf.c
+user1 cc fprintf.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o fprintf.o fprintf.c
+echo ld ppa.b
+ld ppa.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o ppa.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o ppa.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create ppa.b.c
+create ppa.b.c
+echo bintoc ppa ppa.b > ppa.b.c~
+chmod +x ./bintoc
+./bintoc ppa ppa.b > ppa.b.c~ && mv -f ppa.b.c~ ppa.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o ppa.x ppa.b.c
+echo user1 cc fktest.c
+user1 cc fktest.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o fktest.o fktest.c
+echo ld fktest.b
+ld fktest.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o fktest.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o fktest.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create fktest.b.c
+create fktest.b.c
+echo bintoc fktest fktest.b > fktest.b.c~
+chmod +x ./bintoc
+./bintoc fktest fktest.b > fktest.b.c~ && mv -f fktest.b.c~ fktest.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o fktest.x fktest.b.c
+echo user1 cc pingpong.c
+user1 cc pingpong.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o pingpong.o pingpong.c
+echo ld pingpong.b
+ld pingpong.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o pingpong.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o pingpong.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create pingpong.b.c
+create pingpong.b.c
+echo bintoc pingpong pingpong.b > pingpong.b.c~
+chmod +x ./bintoc
+./bintoc pingpong pingpong.b > pingpong.b.c~ && mv -f pingpong.b.c~ pingpong.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o pingpong.x pingpong.b.c
+echo user1 cc idle.c
+user1 cc idle.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o idle.o idle.c
+echo ld idle.b
+ld idle.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o idle.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o idle.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create idle.b.c
+create idle.b.c
+echo bintoc idle idle.b > idle.b.c~
+chmod +x ./bintoc
+./bintoc idle idle.b > idle.b.c~ && mv -f idle.b.c~ idle.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o idle.x idle.b.c
+rm idle.o pingpong.b.c ppa.o idle.b fktest.b.c idle.b.c pingpong.o ppa.b.c fktest.o
+make[1]: Leaving directory `/usr/src/workdir/user'
+make --directory=boot
+make[1]: Entering directory `/usr/src/workdir/boot'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c start.S 
+make[1]: Leaving directory `/usr/src/workdir/boot'
+make --directory=drivers
+make[1]: Entering directory `/usr/src/workdir/drivers'
+make --directory=gxconsole
+make[2]: Entering directory `/usr/src/workdir/drivers/gxconsole'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC   -c -o console.o console.c
+make[2]: Leaving directory `/usr/src/workdir/drivers/gxconsole'
+make[1]: Leaving directory `/usr/src/workdir/drivers'
+make --directory=init
+make[1]: Entering directory `/usr/src/workdir/init'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c init.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c main.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c code.c
+make[1]: Leaving directory `/usr/src/workdir/init'
+make --directory=lib
+make[1]: Entering directory `/usr/src/workdir/lib'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c env.c
+env.c: In function 'env_alloc':
+env.c:204: warning: unused variable 'r'
+env.c: In function 'env_run':
+env.c:506: warning: assignment from incompatible pointer type
+env.c:515: warning: passing argument 1 of 'lcontext' makes integer from pointer without a cast
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c print.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c printf.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c sched.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c env_asm.S
+env_asm.S: Assembler messages:
+env_asm.S:62: Warning: Used $at without ".set noat"
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c kclock.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c traps.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c genex.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c kclock_asm.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c syscall.S
+syscall.S: Assembler messages:
+syscall.S:8: Warning: Used $at without ".set noat"
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c syscall_all.c
+syscall_all.c: In function 'sys_env_alloc':
+syscall_all.c:307: warning: implicit declaration of function 'env_alloc'
+syscall_all.c: In function 'sys_set_env_status':
+syscall_all.c:340: warning: unused variable 'o'
+syscall_all.c:339: warning: unused variable 'env_sched_list'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c getc.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c kernel_elfloader.c
+make[1]: Leaving directory `/usr/src/workdir/lib'
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o gxemul/vmlinux -N -T tools/scse0_3.lds boot/start.o init/main.o init/init.o drivers/gxconsole/console.o lib/*.o mm/*.o user/*.x
+
+End build at Fri May 10 22:37:25 CST 2019
+[35m[ PASSED:7 ][0m
+[35m[ TOTAL:7 ][0m
+Begin build at Fri May 10 22:37:35 CST 2019
+Cleanning the project.................
+
+for d in mm user boot drivers init lib ;	\
+		do					\
+			make --directory=$d clean; \
+		done; \
+	rm -rf *.o *~ gxemul/vmlinux
+make[1]: Entering directory `/usr/src/workdir/mm'
+rm -rf *~ *.o
+make[1]: Leaving directory `/usr/src/workdir/mm'
+make[1]: Entering directory `/usr/src/workdir/user'
+rm -rf *~ *.o *.b.c *.x *.b
+make[1]: Leaving directory `/usr/src/workdir/user'
+make[1]: Entering directory `/usr/src/workdir/boot'
+rm -rf *~ *.o
+make[1]: Leaving directory `/usr/src/workdir/boot'
+make[1]: Entering directory `/usr/src/workdir/drivers'
+for d in gxconsole; \
+		do				\
+			make --directory=$d clean; \
+		done
+make[2]: Entering directory `/usr/src/workdir/drivers/gxconsole'
+rm -rf *.o *~
+make[2]: Leaving directory `/usr/src/workdir/drivers/gxconsole'
+make[1]: Leaving directory `/usr/src/workdir/drivers'
+make[1]: Entering directory `/usr/src/workdir/init'
+rm -rf *~ *.o
+make[1]: Leaving directory `/usr/src/workdir/init'
+make[1]: Entering directory `/usr/src/workdir/lib'
+rm -rf *~ *.o
+make[1]: Leaving directory `/usr/src/workdir/lib'
+
+Building the project..................
+
+make --directory=mm
+make[1]: Entering directory `/usr/src/workdir/mm'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c pmap.c
+pmap.c: In function 'boot_map_segment':
+pmap.c:132: warning: unused variable 'va_temp'
+pmap.c: In function 'page_init':
+pmap.c:203: warning: statement with no effect
+pmap.c:198: warning: unused variable 'last'
+pmap.c: In function 'page_alloc':
+pmap.c:271: warning: passing argument 1 of 'bzero' makes pointer from integer without a cast
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c tlb_asm.S
+make[1]: Leaving directory `/usr/src/workdir/mm'
+make --directory=user
+make[1]: Entering directory `/usr/src/workdir/user'
+echo as entry.S
+as entry.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o entry.o entry.S
+entry.S: Assembler messages:
+entry.S:104: Warning: Used $at without ".set noat"
+echo as syscall_wrap.S
+as syscall_wrap.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o syscall_wrap.o syscall_wrap.S
+echo user1 cc ppa.c
+user1 cc ppa.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o ppa.o ppa.c
+echo user1 cc printf.c
+user1 cc printf.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o printf.o printf.c
+echo user1 cc print.c
+user1 cc print.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o print.o print.c
+echo user1 cc libos.c
+user1 cc libos.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o libos.o libos.c
+echo user1 cc fork.c
+user1 cc fork.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o fork.o fork.c
+fork.c: In function 'pgfault':
+fork.c:101: warning: passing argument 1 of 'user_bcopy' makes pointer from integer without a cast
+fork.c:101: warning: passing argument 2 of 'user_bcopy' makes pointer from integer without a cast
+echo user1 cc pgfault.c
+user1 cc pgfault.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o pgfault.o pgfault.c
+echo user1 cc syscall_lib.c
+user1 cc syscall_lib.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o syscall_lib.o syscall_lib.c
+echo user1 cc ipc.c
+user1 cc ipc.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o ipc.o ipc.c
+echo user1 cc string.c
+user1 cc string.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o string.o string.c
+echo user1 cc fd.c
+user1 cc fd.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o fd.o fd.c
+echo user1 cc pageref.c
+user1 cc pageref.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o pageref.o pageref.c
+echo user1 cc file.c
+user1 cc file.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o file.o file.c
+echo user1 cc pipe.c
+user1 cc pipe.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o pipe.o pipe.c
+pipe.c: In function '_pipeisclosed':
+pipe.c:94: warning: unused variable 'runs'
+pipe.c:94: warning: unused variable 'pfp'
+pipe.c:94: warning: unused variable 'pfd'
+pipe.c:99: warning: control reaches end of non-void function
+pipe.c: In function 'piperead':
+pipe.c:134: warning: unused variable 'rbuf'
+pipe.c:133: warning: unused variable 'p'
+pipe.c:141: warning: 'i' is used uninitialized in this function
+pipe.c: In function 'pipewrite':
+pipe.c:160: warning: unused variable 'wbuf'
+pipe.c:159: warning: unused variable 'p'
+pipe.c:158: warning: unused variable 'i'
+echo user1 cc fsipc.c
+user1 cc fsipc.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o fsipc.o fsipc.c
+echo user1 cc console.c
+user1 cc console.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o console.o console.c
+echo user1 cc fprintf.c
+user1 cc fprintf.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o fprintf.o fprintf.c
+echo ld ppa.b
+ld ppa.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o ppa.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o ppa.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create ppa.b.c
+create ppa.b.c
+echo bintoc ppa ppa.b > ppa.b.c~
+chmod +x ./bintoc
+./bintoc ppa ppa.b > ppa.b.c~ && mv -f ppa.b.c~ ppa.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o ppa.x ppa.b.c
+echo user1 cc fktest.c
+user1 cc fktest.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o fktest.o fktest.c
+echo ld fktest.b
+ld fktest.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o fktest.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o fktest.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create fktest.b.c
+create fktest.b.c
+echo bintoc fktest fktest.b > fktest.b.c~
+chmod +x ./bintoc
+./bintoc fktest fktest.b > fktest.b.c~ && mv -f fktest.b.c~ fktest.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o fktest.x fktest.b.c
+echo user1 cc pingpong.c
+user1 cc pingpong.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o pingpong.o pingpong.c
+echo ld pingpong.b
+ld pingpong.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o pingpong.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o pingpong.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create pingpong.b.c
+create pingpong.b.c
+echo bintoc pingpong pingpong.b > pingpong.b.c~
+chmod +x ./bintoc
+./bintoc pingpong pingpong.b > pingpong.b.c~ && mv -f pingpong.b.c~ pingpong.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o pingpong.x pingpong.b.c
+echo user1 cc idle.c
+user1 cc idle.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c -o idle.o idle.c
+echo ld idle.b
+ld idle.b
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o idle.b  -G 0 -static -n -nostdlib -T ./user.lds entry.o syscall_wrap.o idle.o printf.o print.o libos.o fork.o pgfault.o syscall_lib.o ipc.o string.o fd.o pageref.o file.o pipe.o fsipc.o console.o fprintf.o
+echo create idle.b.c
+create idle.b.c
+echo bintoc idle idle.b > idle.b.c~
+chmod +x ./bintoc
+./bintoc idle idle.b > idle.b.c~ && mv -f idle.b.c~ idle.b.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -c -o idle.x idle.b.c
+rm idle.o pingpong.b.c ppa.o idle.b fktest.b.c idle.b.c pingpong.o ppa.b.c fktest.o
+make[1]: Leaving directory `/usr/src/workdir/user'
+make --directory=boot
+make[1]: Entering directory `/usr/src/workdir/boot'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include/ -c start.S 
+make[1]: Leaving directory `/usr/src/workdir/boot'
+make --directory=drivers
+make[1]: Entering directory `/usr/src/workdir/drivers'
+make --directory=gxconsole
+make[2]: Entering directory `/usr/src/workdir/drivers/gxconsole'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC   -c -o console.o console.c
+make[2]: Leaving directory `/usr/src/workdir/drivers/gxconsole'
+make[1]: Leaving directory `/usr/src/workdir/drivers'
+make --directory=init
+make[1]: Entering directory `/usr/src/workdir/init'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c init.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c main.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I../include -c code.c
+make[1]: Leaving directory `/usr/src/workdir/init'
+make --directory=lib
+make[1]: Entering directory `/usr/src/workdir/lib'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c env.c
+env.c: In function 'env_alloc':
+env.c:204: warning: unused variable 'r'
+env.c: In function 'env_run':
+env.c:506: warning: assignment from incompatible pointer type
+env.c:515: warning: passing argument 1 of 'lcontext' makes integer from pointer without a cast
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c print.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c printf.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c sched.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c env_asm.S
+env_asm.S: Assembler messages:
+env_asm.S:62: Warning: Used $at without ".set noat"
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c kclock.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c traps.c
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c genex.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c kclock_asm.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c syscall.S
+syscall.S: Assembler messages:
+syscall.S:8: Warning: Used $at without ".set noat"
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c syscall_all.c
+syscall_all.c: In function 'sys_env_alloc':
+syscall_all.c:307: warning: implicit declaration of function 'env_alloc'
+syscall_all.c: In function 'sys_set_env_status':
+syscall_all.c:340: warning: unused variable 'o'
+syscall_all.c:339: warning: unused variable 'env_sched_list'
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c getc.S
+/OSLAB/compiler/usr/bin/mips_4KC-gcc -O -G 0 -mno-abicalls -fno-builtin -Wa,-xgot -Wall -fPIC -I./ -I../ -I../include/ -c kernel_elfloader.c
+make[1]: Leaving directory `/usr/src/workdir/lib'
+/OSLAB/compiler/usr/bin/mips_4KC-ld -o gxemul/vmlinux -N -T tools/scse0_3.lds boot/start.o init/main.o init/init.o drivers/gxconsole/console.o lib/*.o mm/*.o user/*.x
+
+End build at Fri May 10 22:37:40 CST 2019
+[35m[ PASSED:8 ][0m
+[35m[ TOTAL:8 ][0m
+[33m[01m[ You got 100 (of 100) this time. Fri May 10 22:37:50 CST 2019 ][0m
