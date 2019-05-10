@@ -18,12 +18,15 @@ struct Dev devfile = {
 };
 
 
-// Open a file (or directory),
-// returning the file descriptor on success, < 0 on failure.
+// Overview:
+//	Open a file (or directory).
+//
+// Returns:
+//	the file descriptor onsuccess,
+//	< 0 on failure.
 int
 open(const char *path, int mode)
 {
-	// Your code here.
 	struct Fd *fd;
 	struct Filefd *ffd;
 	u_int size, fileid;
@@ -31,59 +34,31 @@ open(const char *path, int mode)
 	u_int va;
 	u_int i;
 
-	//writef("IIIIIIIIIIIIIenter open\n");
-	//alloc a fd
-	if ((r = fd_alloc(&fd)) < 0) {
-		writef("Without free fd left\n");
-		return r;
-	}
+	// Step 1: Alloc a new Fd, return error code when fail to alloc.
+	// Hint: Please use fd_alloc.
 
-	//writef("IIIIIIIIIIIopen:come 1\n");
-	/*
-		if((r = syscall_mem_alloc(0, (u_int)fd, PTE_P|PTE_U|PTE_W))<0)
-		{
-			writef("cannot map the page where the fd locates\n");
-			return r;
-		}
-	writef("open:come 2\n");
-	*/
-	//fd is the file descriptor of the opened file
-	//writef("IIIIIIIIIIIopen:fd = %x\n",fd);
-	if ((r = fsipc_open(path, mode, fd)) < 0) {
-		writef("cannont open file %s\n", path);
-		return r;
-	}
 
-	va = fd2data(fd);	//the start address storing the file's content
-	ffd = (struct Filefd *)fd;
-	size = ffd->f_file.f_size;
-	fileid = ffd->f_fileid;
-	//writef("open:ffd = %x,	size = %x,	fileid=%d,	va =%x\n",(u_int)ffd, size, fileid,va);
+	// Step 2: Get the file descriptor of the file to open.
 
-	//map the file content into memory
-	if (size == 0) {
-		return fd2num(fd);
-	}
 
-	for ( i = 0; i < size; i += BY2PG) {
-		if ((r = fsipc_map(fileid, i, va + i)) < 0) {
-			writef("cannot map the file.\n");
-			return r;
-		}
+	// Step 3: Set the start address storing the file's content. Set size and fileid correctly.
+	// Hint: Use fd2data to get the start address.
 
-		//writef("i=%x,	(* vpd)[PDX(%x)]&PTE_P=%x,	(* vpt)[VPN(%x)]&PTE_P=%x\n",i,va+i,(* vpd)[PDX(va+i)]&PTE_V,va+i,(* vpt)[VPN(va+i)]&PTE_V);
-	}
 
-	//writef("open:ffd = %x\n",(u_int)ffd);
-	return fd2num(fd);
-	//user_panic("open() unimplemented!");
+	// Step 4: Map the file content into memory.
+
+
+	// Step 5: Return file descriptor.
+	// Hint: Use fd2num.
+
+	
 }
 
-// Close a file descriptor
+// Overview:
+//	Close a file descriptor
 int
 file_close(struct Fd *fd)
 {
-	// Your code here.
 	int r;
 	struct Filefd *ffd;
 	u_int va, size, fileid;
@@ -92,52 +67,46 @@ file_close(struct Fd *fd)
 	ffd = (struct Filefd *)fd;
 	fileid = ffd->f_fileid;
 	size = ffd->f_file.f_size;
-	va = fd2data(fd);       //the start address storing the file's content
 
-	//tell the file server the dirty page.
+	// Set the start address storing the file's content.
+	va = fd2data(fd);
+
+	// Tell the file server the dirty page.
 	for (i = 0; i < size; i += BY2PG) {
-		//our framework can't PTE_D
-		//if(((* vpt)[(va+i)/BY2PG] & PTE_D)!=0)
 		fsipc_dirty(fileid, i);
 	}
 
-	//request the file server to close the file
+	// Request the file server to close the file with fsipc.
 	if ((r = fsipc_close(fileid)) < 0) {
 		writef("cannot close the file\n");
 		return r;
 	}
 
-	//unmap the content of file
+	// Unmap the content of file, release memory.
 	if (size == 0) {
 		return 0;
 	}
-
 	for (i = 0; i < size; i += BY2PG) {
 		if ((r = syscall_mem_unmap(0, va + i)) < 0) {
 			writef("cannont unmap the file.\n");
 			return r;
 		}
 	}
-
-	//close the file descriptor
-	//fd_close(fd);
-
 	return 0;
-	//user_panic("close() unimplemented!");
 }
 
-// Read 'n' bytes from 'fd' at the current seek position into 'buf'.
-// Since files are memory-mapped, this amounts to a user_bcopy()
-// surrounded by a little red tape to handle the file size and seek pointer.
+// Overview:
+//	Read 'n' bytes from 'fd' at the current seek position into 'buf'. Since files
+//	are memory-mapped, this amounts to a user_bcopy() surrounded by a little red
+//	tape to handle the file size and seek pointer.
 static int
 file_read(struct Fd *fd, void *buf, u_int n, u_int offset)
 {
 	u_int size;
 	struct Filefd *f;
-	//	writef("file_read() come 1\n");
 	f = (struct Filefd *)fd;
 
-	// avoid reading past the end of file
+	// Avoid reading past the end of file.
 	size = f->f_file.f_size;
 
 	if (offset > size) {
@@ -148,16 +117,13 @@ file_read(struct Fd *fd, void *buf, u_int n, u_int offset)
 		n = size - offset;
 	}
 
-	// read the data by copying from the file mapping
-	//	writef("file_read(): bcopy(): src:%x  dst:%x  len:%x \n",(int)(char*)fd2data(fd)+offset, buf, n);
-
 	user_bcopy((char *)fd2data(fd) + offset, buf, n);
-	//	writef("file_read() come 2\n");
 	return n;
 }
 
-// Find the virtual address of the page
-// that maps the file block starting at 'offset'.
+// Overview:
+//	Find the virtual address of the page that maps the file block
+//	starting at 'offset'.
 int
 read_map(int fdnum, u_int offset, void **blk)
 {
@@ -179,7 +145,6 @@ read_map(int fdnum, u_int offset, void **blk)
 		return -E_NO_DISK;
 	}
 
-	//writef("offset=%x,      va=%x,  (* vpd)[PDX(va)]&PTE_P=%x,  (* vpt)[VPN(va)]&PTE_P=%x\n",offset,va,(* vpd)[PDX(va)]&PTE_V,(* vpt)[VPN(va)]&PTE_V);
 	if (!((* vpd)[PDX(va)]&PTE_V) || !((* vpt)[VPN(va)]&PTE_V)) {
 		return -E_NO_DISK;
 	}
@@ -188,7 +153,8 @@ read_map(int fdnum, u_int offset, void **blk)
 	return 0;
 }
 
-// Write 'n' bytes from 'buf' to 'fd' at the current seek position.
+// Overview:
+//	Write 'n' bytes from 'buf' to 'fd' at the current seek position.
 static int
 file_write(struct Fd *fd, const void *buf, u_int n, u_int offset)
 {
@@ -198,21 +164,21 @@ file_write(struct Fd *fd, const void *buf, u_int n, u_int offset)
 
 	f = (struct Filefd *)fd;
 
-	// don't write past the maximum file size
+	// Don't write more than the maximum file size.
 	tot = offset + n;
 
 	if (tot > MAXFILESIZE) {
 		return -E_NO_DISK;
 	}
 
-	// increase the file's size if necessary
+	// Increase the file's size if necessary
 	if (tot > f->f_file.f_size) {
 		if ((r = ftruncate(fd2num(fd), tot)) < 0) {
 			return r;
 		}
 	}
 
-	// write the data
+	// Write the data
 	user_bcopy(buf, (char *)fd2data(fd) + offset, n);
 	return n;
 }
@@ -230,7 +196,8 @@ file_stat(struct Fd *fd, struct Stat *st)
 	return 0;
 }
 
-// Truncate or extend an open file to 'size' bytes
+// Overview:
+//	Truncate or extend an open file to 'size' bytes
 int
 ftruncate(int fdnum, u_int size)
 {
@@ -254,6 +221,7 @@ ftruncate(int fdnum, u_int size)
 	f = (struct Filefd *)fd;
 	fileid = f->f_fileid;
 	oldsize = f->f_file.f_size;
+	f->f_file.f_size = size;
 
 	if ((r = fsipc_set_size(fileid, size)) < 0) {
 		return r;
@@ -278,14 +246,16 @@ ftruncate(int fdnum, u_int size)
 	return 0;
 }
 
-// Delete a file
+// Overview:
+//	Delete a file/directory.
 int
 remove(const char *path)
 {
-	return fsipc_remove(path);
+	// Your code here.
 }
 
-// Synchronize disk with buffer cache
+// Overview:
+//	Synchronize disk with buffer cache
 int
 sync(void)
 {

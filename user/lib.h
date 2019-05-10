@@ -121,7 +121,7 @@ int	stat(const char *path, struct Stat *);
 // file.c
 int	open(const char *path, int mode);
 int	read_map(int fd, u_int offset, void **blk);
-int	delete(const char *path);
+int	remove(const char *path);
 int	ftruncate(int fd, u_int size);
 int	sync(void);
 

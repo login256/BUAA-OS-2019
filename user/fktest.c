@@ -12,7 +12,6 @@ void umain()
 
 			for (;;) {
 				writef("\t\tthis is child2 :a:%d\n", a);
-				//for(;;);
 			}
 		}
 
@@ -20,7 +19,6 @@ void umain()
 
 		for (;;) {
 			writef("\tthis is child :a:%d\n", a);
-			//for(;;);
 		}
 	}
 
@@ -28,6 +26,5 @@ void umain()
 
 	for (;;) {
 		writef("this is father: a:%d\n", a);
-		//for(;;);
 	}
 }
