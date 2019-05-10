@@ -27,7 +27,8 @@ void mips_init()
 	//ENV_CREATE(user_pingpong_a);
 	//ENV_CREATE(user_pingpong_b);
 	//ENV_CREATE(user_try_shhfk);
-	ENV_CREATE(user_try_manyfork);
+	//ENV_CREATE(user_try_manyfork);
+	ENV_CREATE(user_try_end);
     trap_init();
 	kclock_init();
 

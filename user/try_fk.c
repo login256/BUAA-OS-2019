@@ -4,7 +4,7 @@ void umain()
 {
 	int i;
 	int child_id = 0;
-	for (i = 0; i <= 10; i++)
+	for (i = 1; i <= 62; i++)
 	{
 		if ((child_id = fork()) != 0)
 		{
