@@ -185,9 +185,10 @@ void save_block_link(struct File *f, int nblk, int bno)
 
 // Make new block contians link to files in a directory.
 int make_link_block(struct File *dirf, int nblk) {
-    save_block_link(dirf, nblk, nextbno);
+	int curbno = next_block(BLOCK_FILE);
+    save_block_link(dirf, nblk, curbno);
     dirf->f_size += BY2BLK;
-    return next_block(BLOCK_FILE);
+    return curbno;
 }
 
 // Overview:
@@ -201,10 +202,31 @@ int make_link_block(struct File *dirf, int nblk) {
 
 struct File *create_file(struct File *dirf) {
     struct File *dirblk;
-    int i, bno, found;
+    int i, bno, j;
     int nblk = dirf->f_size / BY2BLK;
     
-    // Your code here
+	for (i = 0; i < nblk; i++)
+	{
+		if (i < NDIRECT)
+		{
+			bno = dirf->f_direct[i];
+		}
+		else
+		{
+			bno = ((int *)(disk[dirf->f_indirect].data))[i];
+		}
+		dirblk = (struct File *)(disk[bno].data);
+		for (j = 0; j < FILE2BLK; j++)
+		{
+			if (dirblk[j].f_name[0] == '\0')
+			{
+				return &dirblk[j];
+			}
+		}
+	}
+	//not found
+	bno = make_link_block(dirf, nblk);
+	return (struct File *)disk[bno].data;
 }
 
 // Write file to disk under specified dir.

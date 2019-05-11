@@ -79,5 +79,5 @@ sys_call_table:                         // Syscall Table
     .word sys_ipc_can_send
     .word sys_ipc_recv
     .word sys_cgetc
-     .word sys_write_dev
-     .word sys_read_dev
+    .word sys_write_dev
+    .word sys_read_dev
