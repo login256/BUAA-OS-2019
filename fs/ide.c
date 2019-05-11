@@ -55,7 +55,7 @@ ide_read(u_int diskno, u_int secno, void *dst, u_int nsecs)
 		{
 			user_panic("ide read faild!");
 		}
-		if (syscall_read_dev((u_int)dst + offset, dev_addr + 0x4000, 0x200) < 0)
+		if (syscall_read_dev((u_int)(dst + offset), dev_addr + 0x4000, 0x200) < 0)
 		{
 			user_panic("ide_read error!");
 		}
@@ -99,7 +99,7 @@ ide_write(u_int diskno, u_int secno, void *src, u_int nsecs)
 		{
 			user_panic("ide_write error!");
 		}
-		if (syscall_write_dev((u_int)src + offset, dev_addr + 0x4000, 0x200) < 0)
+		if (syscall_write_dev((u_int)(src + offset), dev_addr + 0x4000, 0x200) < 0)
 		{
 			user_panic("ide_write error!");
 		}
