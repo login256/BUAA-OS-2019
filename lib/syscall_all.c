@@ -531,7 +531,7 @@ int sys_write_dev(int sysno, u_int va, u_int dev, u_int len)
 	{
 		return -E_INVAL;
 	}
-	for (i = 0; i <= cnt_dev; i++)
+	for (i = 0; i < cnt_dev; i++)
 	{
 		if (dev_start_addr[i] <= dev && dev + len - 1 < dev_start_addr[i] + dev_length[i])
 		{
@@ -580,7 +580,7 @@ int sys_read_dev(int sysno, u_int va, u_int dev, u_int len)
 	{
 		return -E_INVAL;
 	}
-	for (i = 0; i <= cnt_dev; i++)
+	for (i = 0; i < cnt_dev; i++)
 	{
 		if (dev_start_addr[i] <= dev && dev + len - 1 < dev_start_addr[i] + dev_length[i])
 		{
