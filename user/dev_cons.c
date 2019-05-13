@@ -32,6 +32,7 @@ char ugetc()
 	while (c == 0)
 	{
 		syscall_read_dev(&c, 0x10000000 + 0x0, 1);
+		syscall_write_dev(&c, 0x10000000 + 0x0, 1);
 	}
 	return c;
 }
