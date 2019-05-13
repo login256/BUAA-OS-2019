@@ -20,7 +20,8 @@ USERLIB := printf.o \
 		pipe.o \
 		fsipc.o \
 		console.o \
-		fprintf.o
+		fprintf.o \
+		dev_cons.o
 
 CFLAGS += -nostdlib -static
 
