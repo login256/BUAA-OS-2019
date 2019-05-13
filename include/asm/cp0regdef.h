@@ -38,6 +38,7 @@
 
 
 #define STATUSF_IP4 0x1000
+#define STATUSF_IP2 0x400
 #define STATUS_CU0 0x10000000
 #define	STATUS_KUC 0x2
 #endif
