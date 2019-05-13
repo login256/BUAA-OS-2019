@@ -31,7 +31,7 @@ char ugetc()
 	char c = 0;
 	while (c == 0)
 	{
-		c = syscall_read_dev(&c, 0x10000000 + 0x0, 1);
+		syscall_read_dev(&c, 0x10000000 + 0x0, 1);
 	}
 	return c;
 }

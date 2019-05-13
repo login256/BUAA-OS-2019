@@ -27,7 +27,7 @@ void mips_init()
 
 	// Create process using macro 'ENC_CREATE'
 	// For more details about 'ENV_CREATE', see include/env.h
-	ENV_CREATE(user_pingpong);
+	ENV_CREATE(user_try_ab);
 
 	panic("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
