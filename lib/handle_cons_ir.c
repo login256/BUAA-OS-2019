@@ -1,5 +1,11 @@
 #include <printf.h>
 
+void print_situation(int v)
+{
+	printf("%x\n",v);
+	return;
+}
+
 void handle_cons_ir(char c, int status)
 {
 	static char buffer[70];
