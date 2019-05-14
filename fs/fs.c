@@ -16,11 +16,7 @@ u_int
 diskaddr(u_int blockno)
 {
 	u_int offset;
-	if (super == NULL)
-	{
-		user_panic("diskaddr() : super is NULL!");
-	}
-	if (blockno > super->s_nblocks)
+	if (super && blockno > super->s_nblocks)
 	{
 		user_panic("diskaddr() : blockno is too large!");
 	}
@@ -559,15 +555,27 @@ dir_lookup(struct File *dir, char *name, struct File **file)
 	struct File *f;
 
 	// Step 1: Calculate nblock: how many blocks this dir have.
+	nblock = dir->f_size / BY2BLK;
 
 	for (i = 0; i < nblock; i++) {
 		// Step 2: Read the i'th block of the dir.
 		// Hint: Use file_get_block.
-
-
+		r = file_get_block(dir, i, &blk);
+		if (r < 0)
+		{
+			return r;
+		}
 		// Step 3: Find target file by file name in all files on this block.
 		// If we find the target file, set the result to *file and set f_dir field.
-		
+		for (j = 0; j < FILE2BLK; j++) {
+			f = ((struct File *)blk) + j;
+			if (strcmp(f->f_name, name) == 0)
+			{
+				f->f_dir = dir;
+				*file = f;
+				return 0;
+			}
+		}
 	}
 
 	return -E_NOT_FOUND;

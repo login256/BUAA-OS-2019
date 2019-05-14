@@ -46,10 +46,10 @@ clean:
 
 
 
-test: clean all
+test: all
 	/OSLAB/gxemul -E testmips -C R3000 -M 64 gxemul/vmlinux
 
-debug: clean all
+debug: all
 	/OSLAB/gxemul -E testmips -C R3000 -M 64 -V gxemul/vmlinux
 
 include include.mk
