@@ -546,6 +546,7 @@ int sys_write_dev(int sysno, u_int va, u_int dev, u_int len)
 
 	//do copy
 	bcopy((void *)va, (void *)target_addr, len);
+	//printf("write_dev: va: %x dev: %x len: %x %s\n", va, dev, len, (char*)va);
 
 	return 0;
 }
@@ -595,6 +596,7 @@ int sys_read_dev(int sysno, u_int va, u_int dev, u_int len)
 
 	//do copy
 	bcopy((void *)target_addr, (void *)va, len);
+	//printf("read_dev: va: %x dev: %x len: %x %s\n", va, dev, len, (char*)va);
 
 	return 0;
 }

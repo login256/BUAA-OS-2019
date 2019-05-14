@@ -75,12 +75,12 @@ map_block(u_int blockno)
 	int re;
 	addr = block_is_mapped(blockno);
 	// Step 1: Decide whether this block is already mapped to a page of physical memory.
-	if (addr == 0)
+	if (addr != 0)
 	{
 		return 0;
 	}
     // Step 2: Alloc a page of memory for this block via syscall.
-	re = syscall_mem_alloc(0, addr, PTE_V & PTE_R);
+	re = syscall_mem_alloc(0, addr, PTE_V | PTE_R);
 	return re;
 }
 
@@ -220,7 +220,7 @@ void
 free_block(u_int blockno)
 {
 	// Step 1: Check if the parameter `blockno` is valid (`blockno` can't be zero).
-	if (blockno == 0 || super == 0 || blockno >= super->s_nblocks)
+	if (blockno == 0 || (super != 0 && blockno >= super->s_nblocks))
 	{
 		//panic("free block with wrong blockno!");
 		return;
@@ -555,7 +555,7 @@ dir_lookup(struct File *dir, char *name, struct File **file)
 	struct File *f;
 
 	// Step 1: Calculate nblock: how many blocks this dir have.
-	nblock = dir->f_size / BY2BLK;
+	nblock = ROUND(dir->f_size, BY2BLK) / BY2BLK;
 
 	for (i = 0; i < nblock; i++) {
 		// Step 2: Read the i'th block of the dir.

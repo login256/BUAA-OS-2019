@@ -47,9 +47,9 @@ clean:
 
 
 test: all
-	/OSLAB/gxemul -E testmips -C R3000 -M 64 gxemul/vmlinux
+	/OSLAB/gxemul -E testmips -C R3000 -M 64 -d gxemul/fs.img gxemul/vmlinux
 
 debug: all
-	/OSLAB/gxemul -E testmips -C R3000 -M 64 -V gxemul/vmlinux
+	/OSLAB/gxemul -E testmips -C R3000 -M 64 -d gxemul/fs.img -V gxemul/vmlinux
 
 include include.mk

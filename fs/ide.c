@@ -33,7 +33,7 @@ ide_read(u_int diskno, u_int secno, void *dst, u_int nsecs)
 
 	while (offset_begin + offset < offset_end) {
 		u_int now_offset = offset_begin + offset;
-		u_int read_value = 0;
+		u_char read_value = 0;
 		if (syscall_write_dev((u_int)&diskno, dev_addr + 0x10, 4) < 0)
 		{
 			user_panic("ide_read error!");
@@ -61,6 +61,7 @@ ide_read(u_int diskno, u_int secno, void *dst, u_int nsecs)
 		}
 		offset += 0x200;
 	}
+	//writef("ide_read %x %s\n", offset_begin, dst);
 }
 
 
@@ -90,7 +91,7 @@ ide_write(u_int diskno, u_int secno, void *src, u_int nsecs)
 
 	while (offset_begin + offset < offset_end) {
 		u_int now_offset = offset_begin + offset;
-		u_int write_value = 1;
+		u_char write_value = 1;
 		if (syscall_write_dev((u_int)&diskno, dev_addr + 0x10, 4) < 0)
 		{
 			user_panic("ide_write error!");
@@ -118,6 +119,6 @@ ide_write(u_int diskno, u_int secno, void *src, u_int nsecs)
 		}
 		offset += 0x200;
 	}
-
+	//writef("ide_write %x %s\n", offset_begin, src);
 }
 
