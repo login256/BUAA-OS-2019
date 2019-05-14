@@ -29,11 +29,11 @@ ide_read(u_int diskno, u_int secno, void *dst, u_int nsecs)
 	u_int offset_end = offset_begin + nsecs * 0x200;
 	u_int offset = 0;
 	u_int dev_addr = 0x13000000;
-	u_int status = 0;
+	u_char status = 0;
+	u_char read_value = 0;
 
 	while (offset_begin + offset < offset_end) {
 		u_int now_offset = offset_begin + offset;
-		u_char read_value = 0;
 		if (syscall_write_dev((u_int)&diskno, dev_addr + 0x10, 4) < 0)
 		{
 			user_panic("ide_read error!");
@@ -85,13 +85,13 @@ ide_write(u_int diskno, u_int secno, void *src, u_int nsecs)
 	u_int offset_end = offset_begin + nsecs * 0x200;
 	u_int offset = 0;
 	u_int dev_addr = 0x13000000;
-	u_int status = 0;
+	u_char status = 0;
+	u_char write_value = 1;
 
 	writef("diskno: %d\n", diskno);
 
 	while (offset_begin + offset < offset_end) {
 		u_int now_offset = offset_begin + offset;
-		u_char write_value = 1;
 		if (syscall_write_dev((u_int)&diskno, dev_addr + 0x10, 4) < 0)
 		{
 			user_panic("ide_write error!");
