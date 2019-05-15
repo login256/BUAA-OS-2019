@@ -268,7 +268,7 @@ ftruncate(int fdnum, u_int size)
 int
 remove(const char *path)
 {
-	// Your code here.
+	return fsipc_remove(path);
 }
 
 // Overview:
