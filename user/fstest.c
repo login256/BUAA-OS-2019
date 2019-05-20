@@ -10,6 +10,7 @@ void umain()
         char buf[512];
         int n;
 
+		/*
         if ((r = open("/newmotd", O_RDWR)) < 0) {
                 user_panic("open /newmotd: %d", r);
         }
@@ -63,6 +64,10 @@ void umain()
 		user_panic("open after remove /newmotd: %d",r);
 	}
 	writef("file remove: OK\n");
+	*/
+		if ((r = open("/a.lnk", O_RDONLY)) < 0) {
+                user_panic("open /a.lnk: %d", r);
+        }
         while (1) {
                 //writef("IDLE!");
         }

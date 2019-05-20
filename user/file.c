@@ -69,6 +69,11 @@ open(const char *path, int mode)
 
 	if (ffd->f_file.f_type == FTYPE_SYML)
 	{
+		while(((char *)va)[size-1] == '\n')
+		{
+			((char *)va)[size-1] = '\0';
+			size--;
+		}
 		return r = open(va, mode);
 		if (r < 0)
 		{
@@ -94,6 +99,10 @@ file_close(struct Fd *fd)
 	u_int i;
 
 	ffd = (struct Filefd *)fd;
+	if (ffd->f_file.f_type == FTYPE_SYML)
+	{
+		file_close(num2fd(fdmap[fd2num(fd)]));
+	}
 	fileid = ffd->f_fileid;
 	size = ffd->f_file.f_size;
 
