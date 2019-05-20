@@ -17,6 +17,7 @@ struct Dev devfile = {
 	.dev_stat =	file_stat,
 };
 
+//int fdmap[PDMAP / BY2PG];
 
 // Overview:
 //	Open a file (or directory).
@@ -64,6 +65,18 @@ open(const char *path, int mode)
 		{
 			return r;
 		}
+	}
+
+	if (ffd->f_file.f_type == FTYPE_SYML)
+	{
+		return r = open(va, mode);
+		/*
+		if (r < 0)
+		{
+			return r;
+		}
+		fdmap[fd2num(fd)] = r;
+		*/
 	}
 
 	// Step 5: Return file descriptor.
