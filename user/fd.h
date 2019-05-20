@@ -24,6 +24,7 @@ struct Fd {
 	u_int fd_offset;
 	u_int fd_omode;
 };
+here is ce!!
 
 struct Stat {
 	char st_name[MAXNAMELEN];
