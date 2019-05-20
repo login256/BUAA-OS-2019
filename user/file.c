@@ -17,7 +17,7 @@ struct Dev devfile = {
 	.dev_stat =	file_stat,
 };
 
-char check_buf[2*BY2PG];
+u_char check_buf[2*BY2PG];
 
 int get_checksum(const char *path)
 {
@@ -41,7 +41,7 @@ int get_checksum(const char *path)
 		n = file_read(fd, check_buf, BY2PG, i);
 		for (j = 0; j < n; j++)
 		{
-			nowv = nowv + (u_char) check_buf[j];
+			nowv = nowv + check_buf[j];
 		}
 		ans = ans ^ (~nowv);
 	}
