@@ -1,8 +1,0 @@
-gxemul/fs.out
-gxemul/fs.img
-gxemul/fs2.img
-gxemul/fs_.img_
-gxemul/vmlinux
-*.o
-*.b
-*.x
