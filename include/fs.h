@@ -41,6 +41,7 @@ struct File {
 // File types
 #define FTYPE_REG		0	// Regular file
 #define FTYPE_DIR		1	// Directory
+#define FTYPE_SYML		2	// Symbol Link
 
 
 // File system super-block (both in-memory and on-disk)
