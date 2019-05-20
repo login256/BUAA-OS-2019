@@ -25,7 +25,7 @@ int get_checksum(const char *path)
 	struct Fd *fd;
 	struct Filefd *ffd;
 	int size;
-	int ans = 0;
+	u_char ans = 0;
 	r = open(path, O_RDONLY);
 	if (r < 0)
 	{
