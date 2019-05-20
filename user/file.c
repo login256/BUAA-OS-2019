@@ -70,13 +70,11 @@ open(const char *path, int mode)
 	if (ffd->f_file.f_type == FTYPE_SYML)
 	{
 		return r = open(va, mode);
-		/*
 		if (r < 0)
 		{
 			return r;
 		}
 		fdmap[fd2num(fd)] = r;
-		*/
 	}
 	*/
 
