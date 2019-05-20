@@ -185,10 +185,12 @@ void save_block_link(struct File *f, int nblk, int bno)
 
 // Make new block contians link to files in a directory.
 int make_link_block(struct File *dirf, int nblk) {
-	int curbno = next_block(BLOCK_FILE);
-    save_block_link(dirf, nblk, curbno);
+	//int curbno = next_block(BLOCK_FILE);
+    //save_block_link(dirf, nblk, curbno);
+	save_block_link(dirf, nblk, nextbno);
     dirf->f_size += BY2BLK;
-    return curbno;
+    //return curbno;
+	return next_block(BLOCK_FILE);
 }
 
 // Overview:
