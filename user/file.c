@@ -43,7 +43,7 @@ int get_checksum(const char *path)
 		{
 			nowv = nowv + (u_char) check_buf[j];
 		}
-		ans = ans ^ nowv;
+		ans = ans ^ (~nowv);
 	}
 	ffd->f_file.f_checksum = ans;
 	return fd2num(fd);
