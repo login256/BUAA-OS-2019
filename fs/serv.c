@@ -304,6 +304,7 @@ serve(void)
 void
 umain(void)
 {
+	writef("%d\n",sizeof(struct File));
 	user_assert(sizeof(struct File) == BY2FILE);
 
 	writef("FS is running\n");
