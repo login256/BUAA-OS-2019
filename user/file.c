@@ -17,6 +17,37 @@ struct Dev devfile = {
 	.dev_stat =	file_stat,
 };
 
+char check_buf[2*BY2PG];
+
+int get_checksum(const char *path)
+{
+	int r, i , j;
+	struct Fd *fd;
+	struct Filefd *ffd;
+	int size;
+	int ans = 0;
+	r = open(path, O_RDONLY);
+	if (r < 0)
+	{
+		return r;
+	}
+	fd = num2fd(r);
+	ffd = (struct Filefd *) fd;
+	size = ffd->f_file.f_size;
+	for (i = 0; i < size; i += BY2PG)
+	{
+		int n;
+		u_char nowv = 0;
+		n = file_read(fd, check_buf, BY2PG, i);
+		for (j = 0; j < n; j++)
+		{
+			nowv = nowv + (u_char) check_buf[j];
+		}
+		ans = ans ^ nowv;
+	}
+	ffd->f_file.f_checksum = ans;
+	return fd2num(fd);
+}
 
 // Overview:
 //	Open a file (or directory).

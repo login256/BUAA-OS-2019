@@ -34,6 +34,8 @@ struct File {
 
 	struct File *f_dir;		// the pointer to the dir where this file is in, valid only in memory.
 	u_char f_pad[BY2FILE - MAXNAMELEN - 4 - 4 - NDIRECT * 4 - 4 - 4];
+
+	int f_checksum;
 };
 
 #define FILE2BLK	(BY2BLK/sizeof(struct File))
