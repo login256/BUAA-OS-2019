@@ -66,7 +66,7 @@ open(const char *path, int mode)
 			return r;
 		}
 	}
-
+/*
 	if (ffd->f_file.f_type == FTYPE_SYML)
 	{
 		return r = open(va, mode);
@@ -78,6 +78,7 @@ open(const char *path, int mode)
 		fdmap[fd2num(fd)] = r;
 		*/
 	}
+	*/
 
 	// Step 5: Return file descriptor.
 	// Hint: Use fd2num.
