@@ -17,7 +17,7 @@ struct Dev devfile = {
 	.dev_stat =	file_stat,
 };
 
-//int fdmap[PDMAP / BY2PG];
+int fdmap[PDMAP / BY2PG];
 
 // Overview:
 //	Open a file (or directory).
@@ -66,7 +66,7 @@ open(const char *path, int mode)
 			return r;
 		}
 	}
-/*
+
 	if (ffd->f_file.f_type == FTYPE_SYML)
 	{
 		return r = open(va, mode);
@@ -76,7 +76,7 @@ open(const char *path, int mode)
 		}
 		fdmap[fd2num(fd)] = r;
 	}
-	*/
+	
 
 	// Step 5: Return file descriptor.
 	// Hint: Use fd2num.
@@ -134,6 +134,10 @@ file_read(struct Fd *fd, void *buf, u_int n, u_int offset)
 	u_int size;
 	struct Filefd *f;
 	f = (struct Filefd *)fd;
+	if (f->f_file.f_type == FTYPE_SYML)
+	{
+		return file_read(num2fd(fdmap[fd2num(fd)]), buf, n, offset);
+	}
 
 	// Avoid reading past the end of file.
 	size = f->f_file.f_size;
@@ -192,6 +196,10 @@ file_write(struct Fd *fd, const void *buf, u_int n, u_int offset)
 	struct Filefd *f;
 
 	f = (struct Filefd *)fd;
+	if (f->f_file.f_type == FTYPE_SYML)
+	{
+		return file_write(num2fd(fdmap[fd2num(fd)]), buf, n, offset);
+	}
 
 	// Don't write more than the maximum file size.
 	tot = offset + n;
@@ -218,6 +226,10 @@ file_stat(struct Fd *fd, struct Stat *st)
 	struct Filefd *f;
 
 	f = (struct Filefd *)fd;
+	if (f->f_file.f_type == FTYPE_SYML)
+	{
+		return file_stat(num2fd(fdmap[fd2num(fd)]), st);
+	}
 
 	strcpy(st->st_name, (char *)f->f_file.f_name);
 	st->st_size = f->f_file.f_size;
