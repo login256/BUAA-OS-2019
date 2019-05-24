@@ -254,6 +254,7 @@ env_alloc(struct Env **new, u_int parent_id)
 static int load_icode_mapper(u_long va, u_int32_t sgsize,
 							 u_char *bin, u_int32_t bin_size, void *user_data)
 {
+	//printf("load_icode_mapper: %d %d %d\n",va, sgsize, bin_size);
 	struct Env *env = (struct Env *)user_data;
 	struct Page *p = NULL;
 	u_long i = 0;
@@ -310,7 +311,7 @@ static int load_icode_mapper(u_long va, u_int32_t sgsize,
 			page_insert(env->env_pgdir, p, va + i, PTE_R);
 		}
 		size = MIN(sgsize - i, BY2PG - offset);
-		bcopy((void*)bin, (void*)(page2kva(p) + offset), size);
+		bzero((void*)(page2kva(p) + offset), size);
 		i = i + size;
 	}
 	while (i < sgsize) {
@@ -323,7 +324,6 @@ static int load_icode_mapper(u_long va, u_int32_t sgsize,
 		page_insert(env->env_pgdir, p, va + i, PTE_R);
 		bzero((void*)page2kva(p), size);
 		i += size;
-
 	}
 	return 0;
 }

@@ -717,7 +717,7 @@ void pageout(int va, int context)
 		panic ("page alloc error!");
 	}
 
-	p->pp_ref++;
+	//p->pp_ref++;
 
 	page_insert((Pde *)context, p, VA2PFN(va), PTE_R);
 	printf("pageout:\t@@@___0x%x___@@@  ins a page \n", va);
