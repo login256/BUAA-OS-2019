@@ -139,8 +139,8 @@ void boot_map_segment(Pde *pgdir, u_long va, u_long size, u_long pa, int perm)
     /* Hint: Use `boot_pgdir_walk` to get the page table entry of virtual address `va`. */
 	for (i = 0; i < size; i += BY2PG)
 	{
-		pgtable_entry = boot_pgdir_walk(pgdir, va+i, 1);
-		*pgtable_entry = PTE_ADDR(pa) | (perm | PTE_V);
+		pgtable_entry = boot_pgdir_walk(pgdir, va + i, 1);
+		*pgtable_entry = PTE_ADDR(pa + i) | (perm | PTE_V);
 	}
 }
 
@@ -373,7 +373,7 @@ page_insert(Pde *pgdir, struct Page *pp, u_long va, u_int perm)
 	u_int PERM;
 	Pte *pgtable_entry;
 	PERM = perm | PTE_V;
-	//printf("insert %x %x %x\n",pgdir, va, perm);
+	//printf("insert %x %x %x %x %x\n", curenv?curenv->env_id:0, pgdir, pp->pp_ref, va, perm);
 	/* Step 1: Get corresponding page table entry. */
 	pgdir_walk(pgdir, va, 0, &pgtable_entry);
 

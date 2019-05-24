@@ -2,6 +2,6 @@
 
 umain()
 {
-	while(1)
-		writef("IDLE!");
+	while(1);
+		//writef("IDLE!");
 }

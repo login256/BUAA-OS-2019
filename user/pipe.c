@@ -84,6 +84,8 @@ _pipeisclosed(struct Fd *fd, struct Pipe *p)
 	// to the total number of readers and writers, then
 	// everybody left is what fd is.  So the other end of
 	// the pipe is closed.
+
+	//writef("in closed: fd: %d p: %d\n", pageref(fd), pageref(p));
 	if(pageref(fd) == pageref(p))
 	{
 		return 1;
@@ -123,6 +125,7 @@ piperead(struct Fd *fd, void *vbuf, u_int n, u_int offset)
 	char *rbuf;
 	p = (struct Pipe *)fd2data(fd);
 
+	//writef("in read: fd: %d p: %d\n", pageref(fd), pageref(p));
 	while (p->p_rpos == p->p_wpos)
 	{
 		if (_pipeisclosed(fd, p))
@@ -134,9 +137,15 @@ piperead(struct Fd *fd, void *vbuf, u_int n, u_int offset)
 	rbuf = (char *)vbuf;
 	for (i = 0; i < n ; i++)
 	{
-		if (p->p_rpos == p->p_wpos)
+		while (p->p_rpos == p->p_wpos)
 		{
-			return i;
+			//writef("read : w: %d r: %d n: %d\n", p->p_wpos, p->p_rpos, n);
+			if (i > 0 || _pipeisclosed(fd, p))
+			{
+				//writef("read return due to closed\n");
+				return i;
+			}
+			syscall_yield();
 		}
 		rbuf[i] = p->p_buf[p->p_rpos % BY2PIPE];
 		p->p_rpos++;
@@ -159,6 +168,7 @@ pipewrite(struct Fd *fd, const void *vbuf, u_int n, u_int offset)
 	char *wbuf;
 	
 	p = fd2data(fd); 
+	//writef("in read: fd: %d p: %d\n", pageref(fd), pageref(p));
 
 	wbuf = (char *)vbuf;
 
@@ -166,8 +176,10 @@ pipewrite(struct Fd *fd, const void *vbuf, u_int n, u_int offset)
 	{
 		while (p->p_wpos - p->p_rpos == BY2PIPE)
 		{
+			//writef("write : w: %d r: %d n: %d\n", p->p_wpos, p->p_rpos, n);
 			if(_pipeisclosed(fd, p))
 			{
+				//writef("write return due to closed\n");
 				return 0;
 			}
 			syscall_yield();

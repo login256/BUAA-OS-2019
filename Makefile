@@ -45,4 +45,12 @@ clean:
 		done; \
 	rm -rf *.o *~ $(vmlinux_elf)  $(user_disk)
 
+
+
+test: all
+	/OSLAB/gxemul -E testmips -C R3000 -M 64 -d gxemul/fs.img gxemul/vmlinux
+
+debug: all
+	/OSLAB/gxemul -E testmips -C R3000 -M 64 -d gxemul/fs.img -V gxemul/vmlinux
+
 include include.mk
