@@ -221,6 +221,7 @@ env_alloc(struct Env **new, u_int parent_id)
 	e->env_id = mkenvid(e);
 	e->env_status = ENV_RUNNABLE;
 	e->env_parent_id = parent_id;
+	e->env_runs = 0;
 
     /*Step 4: focus on initializing env_tf structure, located at this new Env. 
      * especially the sp register,CPU status. */
@@ -510,6 +511,7 @@ env_run(struct Env *e)
 
     /*Step 2: Set 'curenv' to the new environment. */
 	curenv = e;
+	curenv->env_runs++;
 
     /*Step 3: Use lcontext() to switch to its address space. */
 	lcontext(e->env_pgdir);

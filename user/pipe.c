@@ -86,7 +86,16 @@ _pipeisclosed(struct Fd *fd, struct Pipe *p)
 	// the pipe is closed.
 
 	//writef("in closed: fd: %d p: %d\n", pageref(fd), pageref(p));
-	if(pageref(fd) == pageref(p))
+
+	int fdref, pref, runs;
+	do
+	{
+		runs = env->env_runs;
+		fdref = pageref(fd);
+		pref = pageref(p);
+	}while(runs != env->env_runs);
+
+	if(fdref == pref)
 	{
 		return 1;
 	}
