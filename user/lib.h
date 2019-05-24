@@ -65,16 +65,16 @@ void syscall_panic(char *msg);
 int syscall_ipc_can_send(u_int envid, u_int value, u_int srcva, u_int perm);
 void syscall_ipc_recv(u_int dstva);
 int syscall_cgetc();
-int syscall_write_dev(u_int va, u_int dev, u_int len);
-int syscall_read_dev(u_int va, u_int dev, u_int len);
+int syscall_write_dev(u_int va,u_int dev,u_int offset);
+int syscall_read_dev(u_int va,u_int dev,u_int offset);
+
 
 // string.c
 int strlen(const char *s);
 char *strcpy(char *dst, const char *src);
-const char *strchr(const char *s, char c);
+const char *strchr(const char *s, char c); 
 void *memcpy(void *destaddr, void const *srcaddr, u_int len);
 int strcmp(const char *p, const char *q);
-
 // ipc.c
 void	ipc_send(u_int whom, u_int val, u_int srcva, u_int perm);
 u_int	ipc_recv(u_int *whom, u_int dstva, u_int *perm);
@@ -91,7 +91,7 @@ int pipe(int pfd[2]);
 int pipeisclosed(int fdnum);
 
 // pageref.c
-int	pageref(void *);
+int pageref(void *);
 
 // pgfault.c
 void set_pgfault_handler(void (*fn)(u_int va));
@@ -100,12 +100,12 @@ void set_pgfault_handler(void (*fn)(u_int va));
 int fwritef(int fd, const char *fmt, ...);
 
 // fsipc.c
-int	fsipc_open(const char *, u_int, struct Fd *);
+int	fsipc_open(const char*, u_int, struct Fd*);
 int	fsipc_map(u_int, u_int, u_int);
 int	fsipc_set_size(u_int, u_int);
 int	fsipc_close(u_int);
 int	fsipc_dirty(u_int, u_int);
-int	fsipc_remove(const char *);
+int	fsipc_remove(const char*);
 int	fsipc_sync(void);
 int	fsipc_incref(u_int);
 
@@ -118,12 +118,12 @@ void	close_all(void);
 int	readn(int fd, void *buf, u_int nbytes);
 int	dup(int oldfd, int newfd);
 int fstat(int fdnum, struct Stat *stat);
-int	stat(const char *path, struct Stat *);
+int	stat(const char *path, struct Stat*);
 
 // file.c
 int	open(const char *path, int mode);
 int	read_map(int fd, u_int offset, void **blk);
-int	remove(const char *path);
+int	delete(const char *path);
 int	ftruncate(int fd, u_int size);
 int	sync(void);
 

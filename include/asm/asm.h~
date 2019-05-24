@@ -1,5 +1,5 @@
 /*
- * asm.h: Assembler macros to make things easier to read.
+ * asmmacro.h: Assembler macros to make things easier to read.
  *
  * Copyright (C) 1996 David S. Miller (dm@engr.sgi.com)
  * Copyright (C) 1998 Ralf Baechle
@@ -35,14 +35,5 @@ symbol:         .frame  sp, framesize, rpc
 #define END(function)                                   \
                 .end    function;                       \
                 .size   function,.-function
-
-#define	EXPORT(symbol)                                  \
-							.globl	symbol; 				\
-				symbol:
-
-#define FEXPORT(symbol)					\
-						.globl	symbol; 			\
-						.type	symbol,@function;		\
-				symbol:
 
 

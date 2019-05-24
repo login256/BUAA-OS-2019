@@ -10,7 +10,7 @@
 
 /*  Note: The ugly cast to a signed int (32-bit) causes the address to be
 	sign-extended correctly on MIPS when compiled in 64-bit mode  */
-#define	PHYSADDR_OFFSET		((signed int)0xA0000000)
+#define	PHYSADDR_OFFSET		((signed int)0x80000000)
 
 
 #define	PUTCHAR_ADDRESS		(PHYSADDR_OFFSET +		\

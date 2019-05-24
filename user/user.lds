@@ -27,7 +27,7 @@ SECTIONS
   _edata = .;			/* End of data section */
 
 
-  . = ALIGN(0x1000);
+
   __bss_start = .;		/* BSS */
   .bss : {
 	*(.bss)

@@ -1,8 +1,7 @@
 #include "lib.h"
 
-void umain()
+umain()
 {
-	while (1) {
+	while(1)
 		writef("IDLE!");
-	}
 }
