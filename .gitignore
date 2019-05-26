@@ -3,6 +3,7 @@ gxemul/fs.img
 gxemul/fs2.img
 gxemul/fs_.img_
 gxemul/vmlinux
+*.b.c
 *.o
 *.b
 *.x
