@@ -124,7 +124,7 @@ again:
 				user_panic("> open file failed!");
 			}
 			fd = r;
-			dup(fd, 0);
+			dup(fd, 1);
 			close(fd);
 			break;
 		case '|':
