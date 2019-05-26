@@ -303,8 +303,16 @@ int spawn(char *prog, char **argv)
 	// Your code ends here
 	//int v = count * entry_size;
 	//writef("try %d \n",  v);
+	
+	// to replace mul
+	int res = 0;
+	for (i = 0 ; i < count; i++)
+	{
+		res += entry_size;
+	}
 	struct Trapframe *tf;
 	//writef("\n::::::::::spawn size : %x  sp : %x::::::::\n", count * entry_size, esp);
+	writef("\n::::::::::spawn size : %x  sp : %x::::::::\n", res, esp);
 	tf = &(envs[ENVX(child_envid)].env_tf);
 	tf->pc = UTEXT;
 	tf->regs[29]=esp;
