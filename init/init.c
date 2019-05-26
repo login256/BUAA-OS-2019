@@ -19,18 +19,19 @@ void mips_init()
 	
 	env_init();
 	
+	ENV_CREATE(user_icode);
+	ENV_CREATE(fs_serv);
 	//ENV_CREATE(user_fktest);
 	//ENV_CREATE(user_pt1);
 	//ENV_CREATE(user_idle);
-	//ENV_CREATE(fs_serv);
 	//ENV_CREATE(user_fktest);
 	//ENV_CREATE(user_pingpong);
 	//ENV_CREATE(user_testfdsharing);	
 	//ENV_CREATE(user_testspawn);
 	//ENV_CREATE(user_testpipe);
 	//ENV_CREATE(user_testpiperace);
-	//ENV_CREATE(user_icode);
-	ENV_CREATE(user_testbss);
+	//ENV_CREATE(user_testptelibrary);
+	//ENV_CREATE(user_testbss);
 	trap_init();
 	kclock_init();
 	//env_run(&envs[0]);

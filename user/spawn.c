@@ -103,6 +103,8 @@ int mem_is_mapped(int va)
 	return (((Pde *)(*vpd))[va >> PDSHIFT] & PTE_V) && (((Pte *)(*vpt))[va >> PGSHIFT] & PTE_V);
 }
 
+#define BUFPAGE (0x40000000)
+
 int 
 usr_load_elf(int fd , Elf32_Phdr *ph, int child_envid){
 	//Hint: maybe this function is useful 
@@ -113,18 +115,16 @@ usr_load_elf(int fd , Elf32_Phdr *ph, int child_envid){
 	u_int file_offset = ph->p_offset;
 	u_char buf[BY2PG];
 	u_int i = 0;
+	//writef("va : %x bin_size : %d sgsize : %d child: %x\n", va, bin_size, sgsize, child_envid);
 	int r;
-	u_int offset = va - ROUNDDOWN(va, BY2PG);
+	u_int offset = va + i - ROUNDDOWN(va + i, BY2PG);
 	int size;
 	if (offset)
 	{
-		if (!mem_is_mapped(va + i))
+		r = syscall_mem_alloc(child_envid, va + i, PTE_V | PTE_R);
+		if (r < 0)
 		{
-			r = syscall_mem_alloc(child_envid, va + i, PTE_V | PTE_R);
-			if (r < 0)
-			{
-				return r;
-			}
+			return r;
 		}
 		size = MIN(bin_size - i, BY2PG - offset);
 		r = seek(fd, file_offset + i);
@@ -137,19 +137,27 @@ usr_load_elf(int fd , Elf32_Phdr *ph, int child_envid){
 		{
 			return r;
 		}
-		user_bcopy((void*)buf, (void*)(va + i + offset), size);
+		r = syscall_mem_map(child_envid, va + i, 0, BUFPAGE, PTE_V | PTE_R);
+		if (r < 0)
+		{
+			return r;
+		}
+		user_bcopy((void*)buf, (void*)(BUFPAGE + offset), size);
+		r = syscall_mem_unmap(0, BUFPAGE);
+		if (r < 0)
+		{
+			return r;
+		}
 		i = i + size;
 	}
+	//writef("__1__\n");
 	while (i < bin_size)
 	{
 		size = MIN(BY2PG, bin_size - i);
-		if (!mem_is_mapped(va + i))
+		r = syscall_mem_alloc(child_envid, va + i, PTE_V | PTE_R);
+		if (r < 0)
 		{
-			r = syscall_mem_alloc(child_envid, va + i, PTE_V | PTE_R);
-			if (r < 0)
-			{
-				return r;
-			}
+			return r;
 		}
 		size = MIN(bin_size - i, BY2PG);
 		r = seek(fd, file_offset + i);
@@ -162,40 +170,49 @@ usr_load_elf(int fd , Elf32_Phdr *ph, int child_envid){
 		{
 			return r;
 		}
-		user_bcopy((void*)buf, (void*)(va + i), size);
+		r = syscall_mem_map(child_envid, va + i, 0, BUFPAGE, PTE_V | PTE_R);
+		if (r < 0)
+		{
+			return r;
+		}
+		user_bcopy((void*)buf, (void*)BUFPAGE, size);
+		r = syscall_mem_unmap(0, BUFPAGE);
+		if (r < 0)
+		{
+			return r;
+		}
 		i += size;
 	}
-	offset = i - ROUNDDOWN(i, BY2PG);
+	//writef("__2__\n");
+	offset = va + i - ROUNDDOWN(va + i, BY2PG);
 	if (offset)
 	{
-		if (!mem_is_mapped(va + i))
+		size = MIN(sgsize - i, BY2PG - offset);
+		r = syscall_mem_map(child_envid, va + i, 0, BUFPAGE, PTE_V | PTE_R);
+		if (r < 0)
 		{
-			r = syscall_mem_alloc(child_envid, va + i, PTE_V | PTE_R);
-			if (r < 0)
-			{
-				return r;
-			}
+			return r;
 		}
-		size = MIN(bin_size - i, BY2PG - offset);
-		user_bzero((void*)(va + i + offset), size);
+		user_bzero((void*)(BUFPAGE + offset), size);
+		r = syscall_mem_unmap(0, BUFPAGE);
+		if (r < 0)
+		{
+			return r;
+		}
 		i = i + size;
-
 	}
+	//writef("__3__\n");
 	while (i < sgsize) 
 	{
 		size = MIN(BY2PG, sgsize - i);
-		if (!mem_is_mapped(va + i))
+		r = syscall_mem_alloc(child_envid, va + i, PTE_V | PTE_R);
+		if (r < 0)
 		{
-			r = syscall_mem_alloc(child_envid, va + i, PTE_V | PTE_R);
-			if (r < 0)
-			{
-				return r;
-			}
+			return r;
 		}
-		size = MIN(bin_size - i, BY2PG);
-		user_bzero((void*)(va + i), size);
 		i += size;
 	}
+	//writef("__4__\n");
 	return 0;
 }
 
@@ -234,6 +251,7 @@ int spawn(char *prog, char **argv)
 	} 
 	entry_size = ehdr->e_phentsize;
 	text_start = ehdr->e_phoff;
+	count = ehdr->e_phnum;
 
 	//can't use ehdr after
 
@@ -278,12 +296,15 @@ int spawn(char *prog, char **argv)
 				user_panic("load faild %d!", r);
 			}
 		}
+		//writef("out load!\n");
 		text_start += entry_size;
 	}
+	//writef("out for\n");
 	// Your code ends here
-
+	//int v = count * entry_size;
+	//writef("try %d \n",  v);
 	struct Trapframe *tf;
-	writef("\n::::::::::spawn size : %x  sp : %x::::::::\n", count * entry_size, esp);
+	//writef("\n::::::::::spawn size : %x  sp : %x::::::::\n", count * entry_size, esp);
 	tf = &(envs[ENVX(child_envid)].env_tf);
 	tf->pc = UTEXT;
 	tf->regs[29]=esp;

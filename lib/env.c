@@ -297,7 +297,7 @@ static int load_icode_mapper(u_long va, u_int32_t sgsize,
 	// printf("binsize OK!\n");
 	/*Step 2: alloc pages to reach `sgsize` when `bin_size` < `sgsize`.
     * i has the value of `bin_size` now. */
-	offset = i - ROUNDDOWN(i, BY2PG);
+	offset = va + i - ROUNDDOWN(va + i, BY2PG);
 	if (offset)
 	{
 		p = page_lookup(env->env_pgdir, va + i, NULL);
