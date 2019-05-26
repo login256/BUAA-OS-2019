@@ -5,7 +5,7 @@ static int curlen;
 static void user_out2string(void *arg, char *s, int l)
 {
     int i;
-	char * b = (char *)arg + curlen;
+	char * b = (char *)arg ;//+ curlen;
     // special termination call
     if ((l==1) && (s[0] == '\0')) return;
     
