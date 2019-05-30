@@ -35,7 +35,6 @@ void mips_init()
 	trap_init();
 	kclock_init();
 	//env_run(&envs[0]);
-
 	//env_run(&envs[1]);
 	
 	panic("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
